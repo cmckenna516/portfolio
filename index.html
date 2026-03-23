@@ -389,9 +389,41 @@
     .fade-in { opacity: 0; transform: translateY(18px); transition: opacity 0.7s ease, transform 0.7s ease; }
     .fade-in.visible { opacity: 1; transform: translateY(0); }
 
+    /* ── ARTIFACT CTA ── */
+    .artifact-cta {
+      display: inline-block;
+      margin-top: 1rem;
+      padding: 0.45rem 1rem;
+      border: 1px solid rgba(37,99,235,0.35);
+      border-radius: 5px;
+      font-size: 0.78rem; font-weight: 600;
+      color: #60A5FA;
+      letter-spacing: 0.01em;
+      transition: border-color 0.2s, color 0.2s, background 0.2s;
+    }
+    .artifact-cta:hover { border-color: var(--blue); color: #fff; background: rgba(37,99,235,0.15); }
+    .artifact-cta-disabled {
+      display: inline-block;
+      margin-top: 1rem;
+      padding: 0.45rem 1rem;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 5px;
+      font-size: 0.78rem; font-weight: 500;
+      color: rgba(255,255,255,0.2);
+      letter-spacing: 0.01em;
+      cursor: default;
+    }
+
     /* ── RESPONSIVE ── */
     @media (max-width: 960px) {
       .about-grid { grid-template-columns: 1fr; gap: 4rem; }
+    }
+    @media (max-width: 1080px) {
+      #hero { padding: 7rem 6% 4rem; }
+      .hero-rule { margin-bottom: 1.25rem; }
+      .hero-eyebrow { margin-bottom: 1.25rem; }
+      #hero h1 { margin-bottom: 1.25rem; }
+      .hero-sub { margin-bottom: 2rem; }
     }
     @media (max-width: 768px) {
       nav { padding: 1rem 5%; }
@@ -399,6 +431,11 @@
       section { padding: 5rem 5%; }
       #contact { padding: 6rem 5%; }
       .stat-group { gap: 2rem; }
+      #hero { padding: 5.5rem 5% 2.5rem; }
+      .hero-rule { margin-bottom: 0.75rem; }
+      .hero-eyebrow { margin-bottom: 0.75rem; }
+      #hero h1 { margin-bottom: 0.875rem; }
+      .hero-sub { margin-bottom: 1.5rem; font-size: 0.95rem; }
     }
   </style>
 </head>
@@ -505,12 +542,12 @@
       <div class="tool-card">
         <div class="tool-header"><div class="tool-icon">💬</div><div class="tool-name">ChatGPT</div></div>
         <div class="tool-tag">Research &amp; Ideation</div>
-        <p class="tool-desc">Go-to for quick ideation, drafts, and broad research. Memory is genuinely useful. I bounce between ChatGPT and Claude depending on the task — they have different strengths.</p>
+        <p class="tool-desc">Go-to for quick ideation, drafts, and broad research. Memory is genuinely useful. I bounce between ChatGPT and Claude depending on the task — they have different strengths. I also use it heavily for image generation: YouTube thumbnails, mocking up what a piece of furniture would look like in my actual living room, flyers for events, and other fun creative stuff. I've built custom GPTs here too — including Media Assistant, which takes a YouTube video description and generates optimized titles, descriptions, thumbnail concepts, and A/B test variants, building out the full asset suite around your main content.</p>
       </div>
       <div class="tool-card">
         <div class="tool-header"><div class="tool-icon">⚡</div><div class="tool-name">Cursor</div></div>
         <div class="tool-tag">Code Editor</div>
-        <p class="tool-desc">AI-native code editor. I'm not a developer by trade but Cursor lets me build real things. Write a description of what you want, get working code. The gap between idea and built has never been smaller.</p>
+        <p class="tool-desc">AI-native code editor. I'm not a classically trained software engineer but Cursor lets me build real things. Write a description of what you want, get working code. I also love that it shows you exactly which files are being touched — you can click into them and preview changes in real time. I run Claude Code inside Cursor too, which gives me an even tighter AI-assisted workflow when I need more control over the build.</p>
       </div>
       <div class="tool-card">
         <div class="tool-header"><div class="tool-icon">🔁</div><div class="tool-name">n8n</div></div>
@@ -520,32 +557,32 @@
       <div class="tool-card">
         <div class="tool-header"><div class="tool-icon">🚀</div><div class="tool-name">Replit</div></div>
         <div class="tool-tag">Rapid Prototyping</div>
-        <p class="tool-desc">Browser-based coding environment. Perfect for spinning up a prototype fast without worrying about setup. I use it to turn ideas into working demos in hours, not weeks.</p>
+        <p class="tool-desc">Browser-based coding environment that removes every setup obstacle between you and a working app. I built a fully functioning project tracking tool for my team here — GANTT charts, tasks, subtasks, the works — without being asked. I saw a gap, filled it fast, and iterated on it with the team over time until it was exactly what they needed.</p>
       </div>
       <div class="tool-card">
         <div class="tool-header"><div class="tool-icon">🌊</div><div class="tool-name">Parabola</div></div>
         <div class="tool-tag">Data Automation</div>
-        <p class="tool-desc">No-code data pipeline tool. Built complex flows at work connecting multiple data sources, transforming and routing data to the right places. Incredibly powerful for ops-heavy workflows.</p>
+        <p class="tool-desc">No-code data pipeline tool with serious power under the hood. I built a flow that pulled from 30 different files across 2 separate data sources, combined everything into a single clean database, and then piped that database into Replit to power a visual dashboard built exactly around what the team needed to see.</p>
       </div>
       <div class="tool-card">
         <div class="tool-header"><div class="tool-icon">🔗</div><div class="tool-name">Make.com</div></div>
         <div class="tool-tag">App Automation</div>
-        <p class="tool-desc">Cross-app automation with a strong visual builder. More flexible than Zapier at the same price point. I use it when I need to connect consumer apps quickly.</p>
+        <p class="tool-desc">Cross-app automation with a strong visual builder. More flexible than Zapier at the same price point. I use it to schedule automations and get complex, standardized processes to run reliably without anyone having to touch them — set it up once, let it run.</p>
       </div>
       <div class="tool-card">
         <div class="tool-header"><div class="tool-icon">📓</div><div class="tool-name">NotebookLM</div></div>
         <div class="tool-tag">Research Synthesis</div>
-        <p class="tool-desc">Google's research tool for uploading documents and having AI synthesize across them. Excellent for turning a pile of PDFs or notes into a knowledge base you can query.</p>
+        <p class="tool-desc">Ask a targeted question to one document or fifty, and get a straight, source-grounded answer. It's great for moments like "I know we have a policy on this but I can't remember the specific detail" — NotebookLM tells you the answer and shows you exactly where it came from. No hallucinating, no digging through files.</p>
       </div>
       <div class="tool-card">
         <div class="tool-header"><div class="tool-icon">💎</div><div class="tool-name">Gemini</div></div>
         <div class="tool-tag">Multimodal AI</div>
-        <p class="tool-desc">Google's AI with deep Workspace integration. Useful when everything already lives in Drive, Docs, and Gmail — it just works in that ecosystem.</p>
+        <p class="tool-desc">Google's AI with deep Workspace integration. The standout is that it's right where you're already working — no context switching, no copy-pasting into a separate chat. If your day lives in Drive, Docs, and Gmail, Gemini is just there. Pair it with Nano Banana for image work and it covers a lot of ground.</p>
       </div>
       <div class="tool-card">
         <div class="tool-header"><div class="tool-icon">🍌</div><div class="tool-name">Nano Banana</div></div>
         <div class="tool-tag">Generative Assets</div>
-        <p class="tool-desc">Generative asset creation for visual content and creative AI work. Useful for producing content assets quickly without a design team in the loop.</p>
+        <p class="tool-desc">My go-to for image generation. When I need strong visual output fast — without a designer, without a brief, without waiting — Nano Banana delivers. Excellent image quality, quick iteration, and it handles creative prompts well.</p>
       </div>
     </div>
   </section>
@@ -566,24 +603,27 @@
         <div class="artifact-title">Video Caption Burner</div>
         <p class="artifact-desc">A Claude Skill that automatically burns TikTok/Reels-style captions into video files. Drop videos and SRT files in a folder, run the Skill — done. Handles batches and nested folders automatically.</p>
         <div class="artifact-tags"><span class="tag">Claude Skills</span><span class="tag">FFmpeg</span><span class="tag">Content Production</span></div>
+        <span class="artifact-cta-disabled">Link coming soon</span>
       </div>
       <div class="artifact-card">
         <div class="artifact-header">
           <div class="artifact-category">Claude Skill · Fitness</div>
           <span class="artifact-badge badge-live">Live</span>
         </div>
-        <div class="artifact-title">Mayhem Scaled Workout Logger</div>
-        <p class="artifact-desc">Automatically pulls that week's Mayhem Scaled workouts from SugarWOD and appends them as a new weekly section to a Word training log. Runs every Monday morning — zero manual work required.</p>
-        <div class="artifact-tags"><span class="tag">Claude Skills</span><span class="tag">SugarWOD API</span><span class="tag">Fitness Tracking</span></div>
+        <div class="artifact-title">Workout Logger</div>
+        <p class="artifact-desc">Automatically pulls that week's workouts from a fitness platform and appends them as a new weekly section to a Word training log. Runs on a schedule every week — zero manual work required, builds a growing archive over time.</p>
+        <div class="artifact-tags"><span class="tag">Claude Skills</span><span class="tag">Web Automation</span><span class="tag">Fitness Tracking</span></div>
+        <span class="artifact-cta-disabled">Link coming soon</span>
       </div>
       <div class="artifact-card">
         <div class="artifact-header">
           <div class="artifact-category">Consumer Product · Health</div>
           <span class="artifact-badge badge-building">Building</span>
         </div>
-        <div class="artifact-title">Daily Workout Coach (AI)</div>
+        <div class="artifact-title">Fit in a Pinch</div>
         <p class="artifact-desc">Voice-based fitness companion. Short daily check-in (&lt;5 min): asks how you're feeling, how much time you have, where you are — then suggests a workout from a curated library and logs your progress.</p>
         <div class="artifact-tags"><span class="tag">Voice AI</span><span class="tag">Replit</span><span class="tag">Health Tech</span></div>
+        <span class="artifact-cta-disabled">Link coming soon</span>
       </div>
       <div class="artifact-card">
         <div class="artifact-header">
@@ -593,6 +633,7 @@
         <div class="artifact-title">Dad Support GPT</div>
         <p class="artifact-desc">An AI companion for dads at every stage — expecting, newborn, toddler, all the way up. Grounded in real parenting literature. Answers real questions, tells you what's coming next, and learns your situation.</p>
         <div class="artifact-tags"><span class="tag">Claude / ChatGPT</span><span class="tag">Knowledge Base</span><span class="tag">Consumer AI</span></div>
+        <span class="artifact-cta-disabled">Link coming soon</span>
       </div>
       <div class="artifact-card">
         <div class="artifact-header">
@@ -600,8 +641,9 @@
           <span class="artifact-badge badge-building">Building</span>
         </div>
         <div class="artifact-title">Morning Efficiency Briefing</div>
-        <p class="artifact-desc">Your AI Chief of Staff. Scans your calendar every morning, preps you for every meeting, suggests restaurants for date night, pulls your workout plan — and delivers a daily brief before you even ask.</p>
+        <p class="artifact-desc">Your AI Chief of Staff. Scans your calendar and email every morning — preps you for every meeting, flags anything urgent or tied to a project you're keeping a close eye on, suggests restaurants, pulls your workout plan. Always learning, always evolving, always one step ahead of the obstacles in your day.</p>
         <div class="artifact-tags"><span class="tag">Claude + Gmail</span><span class="tag">Google Calendar</span><span class="tag">Automation</span></div>
+        <span class="artifact-cta-disabled">Link coming soon</span>
       </div>
       <div class="artifact-card">
         <div class="artifact-header">
@@ -611,6 +653,7 @@
         <div class="artifact-title">PeopleOS</div>
         <p class="artifact-desc">A unified company operating system — intranet, project tracker, recognition platform, prompt library, and knowledge base in one. Connects to your existing tools via API with SSO and role-based access.</p>
         <div class="artifact-tags"><span class="tag">Enterprise</span><span class="tag">People Ops</span><span class="tag">Internal Tools</span></div>
+        <span class="artifact-cta-disabled">Link coming soon</span>
       </div>
     </div>
   </section>
@@ -625,7 +668,7 @@
     <div class="products-grid fade-in">
       <div class="product-card">
         <div class="product-num">01 · Health &amp; Fitness</div>
-        <div class="product-title">TurasAI</div>
+        <div class="product-title">Fit in a Pinch</div>
         <div class="product-subtitle">Daily Workout Coach</div>
         <p class="product-desc">A voice-first fitness app that has a short conversation with you each day to figure out the optimal workout, then logs it and tracks your progress over time.</p>
         <ul class="product-features">
@@ -653,13 +696,26 @@
         <div class="product-num">03 · Productivity · Executive AI</div>
         <div class="product-title">Morning Briefing</div>
         <div class="product-subtitle">AI Chief of Staff</div>
-        <p class="product-desc">An AI that wakes up before you do. Scans your calendar, preps your day, removes friction before you even notice it — the kind of thing a great Chief of Staff would do.</p>
+        <p class="product-desc">An AI that wakes up before you do. Scans your calendar and email, preps your day, flags anything urgent or tied to a project you're watching — and removes friction before you even notice it.</p>
         <ul class="product-features">
           <li>Calendar-aware: meeting prep, attendee context, agendas</li>
+          <li>Email-aware: surfaces urgent items and watched-project updates</li>
           <li>Proactive suggestions for date nights, workouts, errands</li>
-          <li>Pulls your workout from connected fitness apps automatically</li>
           <li>Connects to Gmail, Calendar, Slack, and fitness trackers</li>
-          <li>Daily brief delivered to your preferred channel</li>
+          <li>Always learning — gets more proactive the more you use it</li>
+        </ul>
+      </div>
+      <div class="product-card">
+        <div class="product-num">04 · Career &amp; Self-Discovery</div>
+        <div class="product-title">TurasAI</div>
+        <div class="product-subtitle">AI Skill Discovery</div>
+        <p class="product-desc">An AI-guided skill discovery platform. It learns about you through conversation, generates hypotheses about where you may have real talent or potential, then assigns small experiments to test them — and scores your attempts with visible reasoning. The more you use it, the sharper it gets.</p>
+        <ul class="product-features">
+          <li>Conversational onboarding surfaces interests, energy patterns, and problem style</li>
+          <li>Generates skill hypotheses — not generic personality labels</li>
+          <li>Assigns small, low-cost experiments matched to your potential strengths</li>
+          <li>Scores attempts with a transparent rubric and plain-language feedback</li>
+          <li>Dashboard tracks signals over time and suggests what to try next</li>
         </ul>
       </div>
     </div>
@@ -669,7 +725,7 @@
   <section id="industries">
     <div class="fade-in">
       <span class="section-tag">Focus Areas</span>
-      <h2>Where I Want to Work</h2>
+      <h2>Problem Spaces I Love</h2>
       <p class="section-desc">Not a list of where I've been — a list of where I'm headed. These are the spaces where AI can do the most good and where I bring the most energy.</p>
     </div>
     <div class="industries-list fade-in">

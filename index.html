@@ -6,241 +6,403 @@
   <title>Charles McKenna — AI Builder & Operator</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:         #07090F;
-      --surface:    #0D1220;
-      --card:       #111827;
-      --card-hover: #161F33;
-      --border:     rgba(255,255,255,0.07);
-      --blue:       #2563EB;
-      --blue-light: #3B82F6;
-      --blue-glow:  rgba(37,99,235,0.25);
-      --red:        #EF4444;
-      --white:      #F8FAFC;
-      --muted:      #64748B;
-      --subtle:     #1E293B;
-      --font-main:  'Inter', sans-serif;
-      --font-head:  'Space Grotesk', sans-serif;
+      --ink:         #0A0A0F;
+      --ink-mid:     #3F3F50;
+      --ink-faint:   #9090A0;
+      --white:       #FFFFFF;
+      --surface:     #F7F7F9;
+      --border:      rgba(10,10,15,0.10);
+      --blue:        #2563EB;
+      --blue-hover:  #1D4ED8;
+      --blue-dim:    rgba(37,99,235,0.10);
+      --blue-border: rgba(37,99,235,0.22);
+      --hero-bg:     #07070C;
     }
 
     html { scroll-behavior: smooth; }
-    body { background: var(--bg); color: var(--white); font-family: var(--font-main); font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+    body { background: var(--white); color: var(--ink); font-family: 'DM Sans', sans-serif; font-size: 16px; line-height: 1.65; -webkit-font-smoothing: antialiased; }
     ::selection { background: var(--blue); color: #fff; }
     a { color: inherit; text-decoration: none; }
-    ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: var(--bg); }
-    ::-webkit-scrollbar-thumb { background: var(--blue); border-radius: 3px; }
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: var(--surface); }
+    ::-webkit-scrollbar-thumb { background: var(--blue); border-radius: 2px; }
 
-    /* NAV */
+    /* ── NAV ── */
     nav {
       position: fixed; top: 0; left: 0; right: 0; z-index: 100;
       display: flex; align-items: center; justify-content: space-between;
-      padding: 1.1rem 5%;
-      background: rgba(7,9,15,0.85);
-      backdrop-filter: blur(16px);
-      border-bottom: 1px solid var(--border);
+      padding: 1.25rem 6%;
+      transition: background 0.35s, border-color 0.35s, box-shadow 0.35s;
+      border-bottom: 1px solid transparent;
     }
-    .nav-logo { font-family: var(--font-head); font-size: 1.1rem; font-weight: 700; letter-spacing: -0.02em; }
-    .nav-logo span { color: var(--blue-light); }
-    .nav-links { display: flex; gap: 2rem; list-style: none; }
-    .nav-links a { font-size: 0.875rem; font-weight: 500; color: var(--muted); transition: color 0.2s; }
-    .nav-links a:hover { color: var(--white); }
-    .nav-actions { display: flex; align-items: center; gap: 0.75rem; }
+    nav.hero-mode { background: transparent; }
+    nav.scrolled {
+      background: rgba(255,255,255,0.96);
+      backdrop-filter: blur(14px);
+      border-bottom-color: var(--border);
+    }
+    .nav-logo {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.1rem;
+      letter-spacing: -0.01em;
+      color: var(--white);
+      transition: color 0.35s;
+    }
+    nav.scrolled .nav-logo { color: var(--ink); }
+    .nav-links { display: flex; gap: 2.25rem; list-style: none; }
+    .nav-links a {
+      font-size: 0.83rem; font-weight: 500;
+      color: rgba(255,255,255,0.55);
+      transition: color 0.2s;
+      letter-spacing: 0.01em;
+    }
+    nav.scrolled .nav-links a { color: var(--ink-faint); }
+    .nav-links a:hover { color: var(--white) !important; }
+    nav.scrolled .nav-links a:hover { color: var(--ink) !important; }
+    .nav-actions { display: flex; align-items: center; gap: 1.1rem; }
     .nav-resume {
-      display: flex; align-items: center; gap: 0.4rem;
-      padding: 0.45rem 1rem;
-      border: 1px solid var(--border);
+      font-size: 0.82rem; font-weight: 500;
+      color: rgba(255,255,255,0.5);
+      transition: color 0.2s;
+      letter-spacing: 0.01em;
+    }
+    nav.scrolled .nav-resume { color: var(--ink-faint); }
+    .nav-resume:hover { color: var(--white) !important; }
+    nav.scrolled .nav-resume:hover { color: var(--ink) !important; }
+    .nav-cta {
+      padding: 0.5rem 1.25rem;
+      background: var(--blue);
       border-radius: 6px;
-      font-size: 0.8rem; font-weight: 600; color: var(--muted);
+      font-size: 0.82rem; font-weight: 600;
+      color: #fff;
+      transition: background 0.2s;
+    }
+    .nav-cta:hover { background: var(--blue-hover); }
+
+    /* ── HERO ── */
+    #hero {
+      background: var(--hero-bg);
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center;
+      padding: 9rem 6% 7rem;
+      position: relative; overflow: hidden;
+    }
+    .hero-rule { width: 36px; height: 1px; background: var(--blue); margin: 0 auto 2rem; }
+    .hero-eyebrow {
+      font-size: 0.72rem; font-weight: 500;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--blue);
+      margin-bottom: 2rem;
+    }
+    #hero h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(3.75rem, 10vw, 8rem);
+      line-height: 1.0;
+      letter-spacing: -0.025em;
+      color: var(--white);
+      margin-bottom: 1.75rem;
+    }
+    #hero h1 em { font-style: italic; color: var(--blue); }
+    .hero-sub {
+      max-width: 520px;
+      font-size: clamp(1rem, 1.8vw, 1.1rem);
+      color: rgba(255,255,255,0.45);
+      line-height: 1.8;
+      margin-bottom: 3rem;
+      font-weight: 300;
+    }
+    .hero-actions { display: flex; gap: 0.875rem; flex-wrap: wrap; justify-content: center; }
+    .btn-blue {
+      padding: 0.875rem 2rem;
+      background: var(--blue);
+      border-radius: 7px;
+      font-size: 0.88rem; font-weight: 600;
+      color: #fff;
+      transition: background 0.2s, transform 0.15s;
+      letter-spacing: 0.01em;
+    }
+    .btn-blue:hover { background: var(--blue-hover); transform: translateY(-2px); }
+    .btn-ghost {
+      padding: 0.875rem 2rem;
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 7px;
+      font-size: 0.88rem; font-weight: 500;
+      color: rgba(255,255,255,0.55);
+      transition: border-color 0.2s, color 0.2s, transform 0.15s;
+    }
+    .btn-ghost:hover { border-color: rgba(255,255,255,0.45); color: #fff; transform: translateY(-2px); }
+    .hero-scroll {
+      position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: 0.6rem;
+      color: rgba(255,255,255,0.2); font-size: 0.68rem; letter-spacing: 0.18em; text-transform: uppercase;
+    }
+    .scroll-line {
+      width: 1px; height: 36px;
+      background: linear-gradient(to bottom, rgba(255,255,255,0.2), transparent);
+      animation: scrollLine 2s ease-in-out infinite;
+    }
+    @keyframes scrollLine { 0%,100%{transform:scaleY(1);opacity:1} 50%{transform:scaleY(.4);opacity:.3} }
+
+    /* ── SHARED ── */
+    section { padding: 7rem 6%; }
+    .section-tag {
+      display: block;
+      font-size: 0.7rem; font-weight: 600;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--blue);
+      margin-bottom: 1rem;
+    }
+    h2 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(2.25rem, 4vw, 3.5rem);
+      letter-spacing: -0.025em;
+      line-height: 1.08;
+      margin-bottom: 1.25rem;
+    }
+    .section-desc {
+      color: var(--ink-mid);
+      max-width: 520px;
+      line-height: 1.8;
+      margin-bottom: 4rem;
+      font-weight: 400;
+    }
+
+    /* ── ABOUT ── */
+    #about { background: var(--white); }
+    .about-grid { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 7rem; align-items: start; }
+    .about-text p { color: var(--ink-mid); line-height: 1.85; margin-bottom: 1.3rem; font-size: 1.02rem; }
+    .about-text p strong { color: var(--ink); font-weight: 600; }
+    .about-text p:last-of-type { margin-bottom: 0; }
+    .resume-cta {
+      display: inline-flex; align-items: center; gap: 0.55rem;
+      margin-top: 2.25rem;
+      padding-bottom: 0.15rem;
+      border-bottom: 1px solid var(--blue);
+      font-size: 0.88rem; font-weight: 600; color: var(--blue);
+      transition: gap 0.2s;
+    }
+    .resume-cta:hover { gap: 0.85rem; }
+    .stat-group { display: grid; grid-template-columns: 1fr 1fr; gap: 2.75rem 2.5rem; }
+    .stat-rule { width: 20px; height: 2px; background: var(--blue); margin-bottom: 0.9rem; }
+    .stat-num {
+      font-family: 'DM Serif Display', serif;
+      font-size: 3.25rem;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      color: var(--ink);
+      margin-bottom: 0.4rem;
+    }
+    .stat-label {
+      font-size: 0.75rem; font-weight: 500;
+      color: var(--ink-faint);
+      text-transform: uppercase; letter-spacing: 0.09em;
+    }
+
+    /* ── TOOLBELT ── */
+    #toolbelt { background: var(--surface); }
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 2px;
+    }
+    .tool-card {
+      background: var(--surface);
+      padding: 1.75rem;
+      transition: background 0.2s;
+    }
+    .tool-card:hover { background: var(--white); }
+    .tool-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.6rem; }
+    .tool-icon { font-size: 1.2rem; flex-shrink: 0; width: 30px; text-align: center; }
+    .tool-name { font-family: 'DM Serif Display', serif; font-size: 1.05rem; letter-spacing: -0.01em; }
+    .tool-tag {
+      display: inline-block;
+      margin-bottom: 0.65rem;
+      font-size: 0.67rem; font-weight: 600;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--blue);
+    }
+    .tool-desc { font-size: 0.865rem; color: var(--ink-mid); line-height: 1.7; }
+
+    /* ── PORTFOLIO ── */
+    #portfolio { background: var(--white); }
+    .portfolio-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem; }
+    .artifact-card {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 2rem;
+      transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+    }
+    .artifact-card:hover {
+      border-color: var(--blue-border);
+      transform: translateY(-3px);
+      box-shadow: 0 14px 36px rgba(0,0,0,0.06);
+    }
+    .artifact-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.1rem; }
+    .artifact-category {
+      font-size: 0.68rem; font-weight: 600;
+      letter-spacing: 0.13em; text-transform: uppercase;
+      color: var(--blue); line-height: 1.4;
+    }
+    .artifact-badge {
+      padding: 0.2rem 0.6rem;
+      border-radius: 100px;
+      font-size: 0.67rem; font-weight: 700;
+      letter-spacing: 0.07em; text-transform: uppercase;
+      flex-shrink: 0; margin-left: 0.5rem;
+    }
+    .badge-live   { background: rgba(16,185,129,0.09);  color: #059669; border: 1px solid rgba(16,185,129,0.22); }
+    .badge-building { background: rgba(245,158,11,0.09); color: #D97706; border: 1px solid rgba(245,158,11,0.22); }
+    .badge-concept { background: rgba(99,102,241,0.09); color: #6366F1; border: 1px solid rgba(99,102,241,0.22); }
+    .artifact-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.3rem; letter-spacing: -0.015em; line-height: 1.15;
+      margin-bottom: 0.7rem;
+    }
+    .artifact-desc { font-size: 0.875rem; color: var(--ink-mid); line-height: 1.75; margin-bottom: 1.25rem; }
+    .artifact-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+    .tag {
+      padding: 0.2rem 0.65rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      font-size: 0.7rem; font-weight: 500;
+      color: var(--ink-mid);
+    }
+
+    /* ── PRODUCTS ── */
+    #products { background: var(--hero-bg); }
+    #products .section-tag  { color: rgba(59,130,246,0.7); }
+    #products h2            { color: var(--white); }
+    #products .section-desc { color: rgba(255,255,255,0.38); }
+    .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.25rem; }
+    .product-card {
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 10px; padding: 2rem;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .product-card:hover { border-color: rgba(37,99,235,0.35); background: rgba(37,99,235,0.04); }
+    .product-num {
+      font-size: 0.67rem; font-weight: 600;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--blue); margin-bottom: 1.25rem;
+    }
+    .product-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.45rem; letter-spacing: -0.015em; line-height: 1.1;
+      color: var(--white); margin-bottom: 0.3rem;
+    }
+    .product-subtitle {
+      font-size: 0.72rem; font-weight: 500;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: rgba(255,255,255,0.28); margin-bottom: 1.1rem;
+    }
+    .product-desc { font-size: 0.88rem; color: rgba(255,255,255,0.45); line-height: 1.8; margin-bottom: 1.5rem; }
+    .product-features { list-style: none; display: flex; flex-direction: column; gap: 0.55rem; }
+    .product-features li {
+      display: flex; align-items: baseline; gap: 0.65rem;
+      font-size: 0.84rem; color: rgba(255,255,255,0.35);
+    }
+    .product-features li::before { content: '—'; color: var(--blue); flex-shrink: 0; font-size: 0.78rem; }
+
+    /* ── INDUSTRIES ── */
+    #industries { background: var(--surface); }
+    .industries-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 3rem 3.5rem; }
+    .industry-rule {
+      width: 22px; height: 2px;
+      background: var(--border);
+      margin-bottom: 0.9rem;
+      transition: background 0.25s;
+    }
+    .industry-item:hover .industry-rule { background: var(--blue); }
+    .industry-num {
+      font-size: 0.67rem; font-weight: 600;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--ink-faint); margin-bottom: 0.45rem;
+    }
+    .industry-name {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.35rem; letter-spacing: -0.015em;
+      margin-bottom: 0.55rem;
+    }
+    .industry-desc { font-size: 0.84rem; color: var(--ink-mid); line-height: 1.7; }
+
+    /* ── CONTACT ── */
+    #contact {
+      background: var(--hero-bg);
+      text-align: center;
+      padding: 9rem 6%;
+    }
+    #contact .section-tag { color: rgba(59,130,246,0.7); }
+    #contact h2 { color: var(--white); margin-bottom: 1.25rem; }
+    #contact .section-desc { color: rgba(255,255,255,0.38); margin: 0 auto 3.5rem; }
+    .contact-email {
+      display: inline-block;
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(1.5rem, 3vw, 2.35rem);
+      letter-spacing: -0.025em;
+      color: var(--white);
+      border-bottom: 1px solid rgba(255,255,255,0.18);
+      padding-bottom: 0.2rem;
+      margin-bottom: 3rem;
       transition: border-color 0.2s, color 0.2s;
     }
-    .nav-resume:hover { border-color: var(--blue-light); color: var(--white); }
-    .nav-cta { padding: 0.5rem 1.2rem; background: var(--blue); border-radius: 6px; font-size: 0.875rem; font-weight: 600; transition: background 0.2s; }
-    .nav-cta:hover { background: var(--blue-light); }
-
-    /* HERO */
-    #hero {
-      min-height: 100vh; display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      text-align: center; padding: 8rem 5% 5rem; position: relative; overflow: hidden;
+    .contact-email:hover { border-color: var(--blue); color: var(--blue); }
+    .contact-links { display: flex; justify-content: center; gap: 0.75rem; flex-wrap: wrap; }
+    .contact-link {
+      padding: 0.65rem 1.4rem;
+      border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 7px;
+      font-size: 0.84rem; font-weight: 500;
+      color: rgba(255,255,255,0.4);
+      transition: border-color 0.2s, color 0.2s;
     }
-    .hero-bg {
-      position: absolute; inset: 0;
-      background:
-        radial-gradient(ellipse 80% 60% at 50% -10%, rgba(37,99,235,0.18) 0%, transparent 70%),
-        radial-gradient(ellipse 50% 40% at 80% 80%, rgba(239,68,68,0.06) 0%, transparent 60%);
-      pointer-events: none;
+    .contact-link:hover { border-color: rgba(255,255,255,0.3); color: var(--white); }
+    .contact-link.resume-link { border-color: var(--blue-border); color: rgba(59,130,246,0.75); }
+    .contact-link.resume-link:hover { border-color: var(--blue); color: var(--blue); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--hero-bg);
+      padding: 2rem 6%;
+      text-align: center;
+      border-top: 1px solid rgba(255,255,255,0.05);
+      color: rgba(255,255,255,0.18);
+      font-size: 0.78rem;
+      letter-spacing: 0.03em;
     }
-    .hero-eyebrow {
-      display: inline-flex; align-items: center; gap: 0.5rem;
-      padding: 0.35rem 1rem;
-      background: rgba(37,99,235,0.1); border: 1px solid rgba(37,99,235,0.25); border-radius: 100px;
-      font-size: 0.8rem; font-weight: 600; color: var(--blue-light);
-      letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 1.5rem;
-    }
-    .hero-eyebrow::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--blue-light); animation: pulse 2s infinite; }
-    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(1.3)} }
-    h1 { font-family: var(--font-head); font-size: clamp(3rem,8vw,6.5rem); font-weight: 800; line-height: 1.02; letter-spacing: -0.04em; margin-bottom: 1.5rem; }
-    h1 .accent { color: var(--blue-light); }
-    .hero-sub { max-width: 640px; font-size: clamp(1rem,2vw,1.2rem); color: #94A3B8; line-height: 1.7; margin-bottom: 2.5rem; }
-    .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; margin-bottom: 1.25rem; }
-    .btn-primary { padding: 0.85rem 2rem; background: var(--blue); border-radius: 8px; font-weight: 700; font-size: 0.95rem; transition: background 0.2s, transform 0.15s, box-shadow 0.2s; }
-    .btn-primary:hover { background: var(--blue-light); transform: translateY(-2px); box-shadow: 0 8px 30px var(--blue-glow); }
-    .btn-outline { padding: 0.85rem 2rem; border: 1px solid var(--border); border-radius: 8px; font-weight: 600; font-size: 0.95rem; color: var(--muted); transition: border-color 0.2s, color 0.2s, transform 0.15s; }
-    .btn-outline:hover { border-color: var(--blue-light); color: var(--white); transform: translateY(-2px); }
-    .btn-resume-hero {
-      display: inline-flex; align-items: center; gap: 0.5rem;
-      padding: 0.6rem 1.4rem;
-      border: 1px solid rgba(239,68,68,0.3); border-radius: 8px;
-      font-size: 0.85rem; font-weight: 600; color: #FCA5A5;
-      transition: border-color 0.2s, color 0.2s, background 0.2s;
-    }
-    .btn-resume-hero:hover { border-color: var(--red); color: var(--white); background: rgba(239,68,68,0.08); }
-    .hero-scroll { position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 0.5rem; color: var(--muted); font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; }
-    .scroll-line { width: 1px; height: 40px; background: linear-gradient(to bottom, var(--muted), transparent); animation: scrollLine 2s ease-in-out infinite; }
-    @keyframes scrollLine { 0%,100%{transform:scaleY(1);opacity:1} 50%{transform:scaleY(.5);opacity:.4} }
 
-    /* SECTIONS */
-    section { padding: 6rem 5%; }
-    .section-label { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--blue-light); margin-bottom: 0.75rem; }
-    .section-label::before { content: ''; display: inline-block; width: 20px; height: 2px; background: var(--blue-light); }
-    h2 { font-family: var(--font-head); font-size: clamp(2rem,4vw,3rem); font-weight: 700; letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 1rem; }
-    .section-desc { color: var(--muted); max-width: 580px; line-height: 1.7; margin-bottom: 3rem; }
-
-    /* ABOUT */
-    #about { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
-    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
-    .about-text p { color: #CBD5E1; line-height: 1.8; margin-bottom: 1.2rem; }
-    .about-text p:last-child { margin-bottom: 0; }
-    .about-text strong { color: var(--white); }
-    .resume-block {
-      display: flex; align-items: center; gap: 1rem;
-      padding: 1.25rem 1.5rem;
-      background: var(--card); border: 1px solid rgba(239,68,68,0.2); border-radius: 12px;
-      margin-top: 1.75rem;
-      transition: border-color 0.2s, transform 0.15s;
-    }
-    .resume-block:hover { border-color: var(--red); transform: translateY(-2px); }
-    .resume-icon { font-size: 1.75rem; flex-shrink: 0; }
-    .resume-label { font-weight: 700; font-size: 0.95rem; margin-bottom: 0.15rem; }
-    .resume-sub { font-size: 0.8rem; color: var(--muted); }
-    .resume-btn {
-      margin-left: auto; flex-shrink: 0;
-      padding: 0.5rem 1.1rem;
-      background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3); border-radius: 6px;
-      font-size: 0.8rem; font-weight: 700; color: #FCA5A5;
-      transition: background 0.2s, color 0.2s;
-    }
-    .resume-block:hover .resume-btn { background: var(--red); color: var(--white); }
-    .about-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
-    .stat-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; text-align: center; transition: border-color 0.2s, transform 0.2s; }
-    .stat-card:hover { border-color: var(--blue); transform: translateY(-3px); }
-    .stat-number { font-family: var(--font-head); font-size: 2.5rem; font-weight: 800; color: var(--blue-light); letter-spacing: -0.04em; }
-    .stat-label { font-size: 0.8rem; color: var(--muted); margin-top: 0.25rem; text-transform: uppercase; letter-spacing: 0.06em; }
-
-    /* TOOLBELT */
-    #toolbelt { background: var(--bg); }
-    .tools-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1.25rem; }
-    .tool-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; transition: border-color 0.2s, transform 0.2s, background 0.2s; position: relative; overflow: hidden; }
-    .tool-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--blue), transparent); opacity: 0; transition: opacity 0.2s; }
-    .tool-card:hover { border-color: rgba(59,130,246,0.4); background: var(--card-hover); transform: translateY(-3px); }
-    .tool-card:hover::before { opacity: 1; }
-    .tool-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem; }
-    .tool-icon { width: 38px; height: 38px; border-radius: 8px; background: var(--subtle); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0; }
-    .tool-name { font-family: var(--font-head); font-weight: 600; font-size: 1rem; }
-    .tool-tag { display: inline-block; padding: 0.15rem 0.6rem; background: var(--subtle); border-radius: 100px; font-size: 0.7rem; font-weight: 600; color: var(--muted); letter-spacing: 0.05em; text-transform: uppercase; }
-    .tool-desc { font-size: 0.875rem; color: #64748B; line-height: 1.6; margin-top: 0.5rem; }
-
-    /* PORTFOLIO */
-    #portfolio { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
-    .portfolio-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; }
-    .artifact-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s; }
-    .artifact-card:hover { border-color: rgba(59,130,246,0.4); transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
-    .artifact-thumb { height: 160px; display: flex; align-items: center; justify-content: center; font-size: 3rem; position: relative; }
-    .artifact-thumb.blue-grad { background: linear-gradient(135deg, rgba(37,99,235,0.3), rgba(7,9,15,0.8)); }
-    .artifact-thumb.red-grad { background: linear-gradient(135deg, rgba(239,68,68,0.25), rgba(7,9,15,0.8)); }
-    .artifact-thumb.green-grad { background: linear-gradient(135deg, rgba(16,185,129,0.25), rgba(7,9,15,0.8)); }
-    .artifact-thumb.purple-grad { background: linear-gradient(135deg, rgba(139,92,246,0.25), rgba(7,9,15,0.8)); }
-    .artifact-thumb.dark-grad { background: linear-gradient(135deg, rgba(30,41,59,0.8), rgba(7,9,15,0.9)); }
-    .artifact-badge { position: absolute; top: 1rem; right: 1rem; padding: 0.25rem 0.7rem; border-radius: 100px; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; }
-    .badge-live { background: rgba(16,185,129,0.15); color: #10B981; border: 1px solid rgba(16,185,129,0.3); }
-    .badge-building { background: rgba(245,158,11,0.15); color: #F59E0B; border: 1px solid rgba(245,158,11,0.3); }
-    .badge-concept { background: rgba(99,102,241,0.15); color: #818CF8; border: 1px solid rgba(99,102,241,0.3); }
-    .artifact-body { padding: 1.5rem; }
-    .artifact-category { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--blue-light); margin-bottom: 0.5rem; }
-    .artifact-title { font-family: var(--font-head); font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem; }
-    .artifact-desc { font-size: 0.875rem; color: var(--muted); line-height: 1.6; margin-bottom: 1rem; }
-    .artifact-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
-    .tag { padding: 0.2rem 0.6rem; background: var(--subtle); border-radius: 100px; font-size: 0.7rem; font-weight: 500; color: #94A3B8; }
-
-    /* PRODUCTS */
-    #products { background: var(--bg); }
-    .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 1.5rem; }
-    .product-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 2rem; transition: border-color 0.2s, transform 0.2s; position: relative; overflow: hidden; }
-    .product-card::after { content: ''; position: absolute; bottom: -60px; right: -60px; width: 160px; height: 160px; border-radius: 50%; background: var(--blue-glow); filter: blur(40px); opacity: 0; transition: opacity 0.3s; }
-    .product-card:hover { border-color: rgba(59,130,246,0.4); transform: translateY(-4px); }
-    .product-card:hover::after { opacity: 1; }
-    .product-icon { width: 52px; height: 52px; border-radius: 12px; background: rgba(37,99,235,0.12); border: 1px solid rgba(37,99,235,0.2); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 1.25rem; }
-    .product-title { font-family: var(--font-head); font-size: 1.2rem; font-weight: 700; margin-bottom: 0.5rem; }
-    .product-subtitle { font-size: 0.8rem; font-weight: 600; color: var(--blue-light); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 0.75rem; }
-    .product-desc { font-size: 0.9rem; color: var(--muted); line-height: 1.7; margin-bottom: 1.25rem; }
-    .product-features { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
-    .product-features li { display: flex; align-items: flex-start; gap: 0.6rem; font-size: 0.85rem; color: #94A3B8; }
-    .product-features li::before { content: '→'; color: var(--blue-light); flex-shrink: 0; margin-top: 0.05rem; }
-
-    /* INDUSTRIES */
-    #industries { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
-    .industries-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; }
-    .industry-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem 1.25rem; text-align: center; transition: border-color 0.2s, transform 0.2s; }
-    .industry-card:hover { border-color: var(--blue); transform: translateY(-3px); }
-    .industry-num { font-family: var(--font-head); font-size: 2rem; font-weight: 800; color: rgba(37,99,235,0.4); line-height: 1; margin-bottom: 0.5rem; }
-    .industry-name { font-family: var(--font-head); font-weight: 700; font-size: 1rem; margin-bottom: 0.4rem; }
-    .industry-desc { font-size: 0.78rem; color: var(--muted); line-height: 1.5; }
-
-    /* REFERENCES */
-    #references { background: var(--bg); }
-    .refs-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; }
-    .ref-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 1.75rem; transition: border-color 0.2s, transform 0.2s; }
-    .ref-card:hover { border-color: rgba(239,68,68,0.3); transform: translateY(-3px); }
-    .ref-quote { font-size: 1.5rem; color: var(--red); margin-bottom: 0.75rem; }
-    .ref-text { font-size: 0.95rem; color: #CBD5E1; line-height: 1.7; font-style: italic; margin-bottom: 1.25rem; }
-    .ref-author { display: flex; align-items: center; gap: 0.75rem; }
-    .ref-avatar { width: 38px; height: 38px; border-radius: 50%; background: var(--subtle); display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 700; color: var(--blue-light); border: 1px solid var(--border); flex-shrink: 0; }
-    .ref-name { font-weight: 700; font-size: 0.9rem; }
-    .ref-role { font-size: 0.78rem; color: var(--muted); }
-
-    /* CONTACT */
-    #contact { background: var(--surface); border-top: 1px solid var(--border); text-align: center; }
-    .contact-links { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; }
-    .contact-link { display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: var(--card); border: 1px solid var(--border); border-radius: 8px; font-size: 0.9rem; font-weight: 600; color: #94A3B8; transition: border-color 0.2s, color 0.2s, transform 0.15s; }
-    .contact-link:hover { border-color: var(--blue); color: var(--white); transform: translateY(-2px); }
-    .contact-link.resume-link { border-color: rgba(239,68,68,0.25); color: #FCA5A5; }
-    .contact-link.resume-link:hover { border-color: var(--red); color: var(--white); background: rgba(239,68,68,0.08); }
-
-    footer { padding: 2rem 5%; text-align: center; border-top: 1px solid var(--border); color: var(--muted); font-size: 0.82rem; }
-    footer span { color: var(--blue-light); }
-
-    .fade-in { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+    /* ── ANIMATIONS ── */
+    .fade-in { opacity: 0; transform: translateY(18px); transition: opacity 0.7s ease, transform 0.7s ease; }
     .fade-in.visible { opacity: 1; transform: translateY(0); }
 
+    /* ── RESPONSIVE ── */
+    @media (max-width: 960px) {
+      .about-grid { grid-template-columns: 1fr; gap: 4rem; }
+    }
     @media (max-width: 768px) {
-      nav { padding: 1rem 4%; }
+      nav { padding: 1rem 5%; }
       .nav-links { display: none; }
-      section { padding: 4rem 4%; }
-      .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
-      .about-stats { grid-template-columns: 1fr 1fr; }
+      section { padding: 5rem 5%; }
+      #contact { padding: 6rem 5%; }
+      .stat-group { gap: 2rem; }
     }
   </style>
 </head>
 <body>
 
   <!-- NAV -->
-  <nav>
-    <div class="nav-logo">Charles<span>.</span>McKenna</div>
+  <nav class="hero-mode" id="nav">
+    <a href="#hero" class="nav-logo">Charles McKenna</a>
     <ul class="nav-links">
       <li><a href="#about">About</a></li>
       <li><a href="#toolbelt">Toolbelt</a></li>
@@ -249,18 +411,18 @@
       <li><a href="#industries">Focus Areas</a></li>
     </ul>
     <div class="nav-actions">
-      <a href="Charles_McKenna_Resume.pdf" target="_blank" class="nav-resume">↓ Resume</a>
+      <a href="Charles_McKenna_Resume.pdf" target="_blank" class="nav-resume">Resume ↗</a>
       <a href="mailto:cmckenna516@gmail.com" class="nav-cta">Get in Touch</a>
     </div>
   </nav>
 
   <!-- HERO -->
   <section id="hero">
-    <div class="hero-bg"></div>
-    <div class="hero-eyebrow">AI Builder & Operator</div>
+    <div class="hero-rule"></div>
+    <p class="hero-eyebrow">AI Builder &amp; Operator</p>
     <h1>
       I Build<br />
-      <span class="accent">With AI.</span><br />
+      With <em>AI.</em><br />
       Seriously.
     </h1>
     <p class="hero-sub">
@@ -268,12 +430,9 @@
       From fitness apps to executive efficiency tools to workflow automation, this is my working portfolio.
     </p>
     <div class="hero-actions">
-      <a href="#portfolio" class="btn-primary">View My Work</a>
-      <a href="#toolbelt" class="btn-outline">My Toolbelt →</a>
+      <a href="#portfolio" class="btn-blue">View My Work</a>
+      <a href="Charles_McKenna_Resume.pdf" target="_blank" class="btn-ghost">Download Resume ↗</a>
     </div>
-    <a href="Charles_McKenna_Resume.pdf" target="_blank" class="btn-resume-hero">
-      📄 Download Resume
-    </a>
     <div class="hero-scroll">
       <div class="scroll-line"></div>
       Scroll
@@ -284,7 +443,7 @@
   <section id="about">
     <div class="about-grid fade-in">
       <div class="about-text">
-        <div class="section-label">About</div>
+        <span class="section-tag">About</span>
         <h2>Building the Future<br />One Tool at a Time</h2>
         <p>
           I approach my career through the lens of my <strong>AI toolbelt</strong> — a constantly evolving stack of tools I use to move faster, build smarter, and solve problems that used to require entire teams.
@@ -295,31 +454,32 @@
         <p>
           I sit at the intersection of operator, builder, and strategist. I can talk product roadmap in the morning, ship an AI-powered workflow by lunch, and train an exec team on AI adoption in the afternoon.
         </p>
-        <a href="Charles_McKenna_Resume.pdf" target="_blank" class="resume-block">
-          <div class="resume-icon">📄</div>
-          <div>
-            <div class="resume-label">Charles McKenna — Resume</div>
-            <div class="resume-sub">Updated December 2025 · PDF</div>
-          </div>
-          <div class="resume-btn">↓ Download</div>
+        <a href="Charles_McKenna_Resume.pdf" target="_blank" class="resume-cta">
+          Download Resume ↗
         </a>
       </div>
-      <div class="about-stats">
-        <div class="stat-card">
-          <div class="stat-number">10+</div>
-          <div class="stat-label">AI Tools in Active Use</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-number">6+</div>
-          <div class="stat-label">Portfolio Builds</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-number">3</div>
-          <div class="stat-label">Products in Development</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-number">5</div>
-          <div class="stat-label">Target Industries</div>
+      <div>
+        <div class="stat-group">
+          <div>
+            <div class="stat-rule"></div>
+            <div class="stat-num">10+</div>
+            <div class="stat-label">AI Tools in Active Use</div>
+          </div>
+          <div>
+            <div class="stat-rule"></div>
+            <div class="stat-num">6+</div>
+            <div class="stat-label">Portfolio Builds</div>
+          </div>
+          <div>
+            <div class="stat-rule"></div>
+            <div class="stat-num">3</div>
+            <div class="stat-label">Products in Development</div>
+          </div>
+          <div>
+            <div class="stat-rule"></div>
+            <div class="stat-num">5</div>
+            <div class="stat-label">Target Industries</div>
+          </div>
         </div>
       </div>
     </div>
@@ -328,49 +488,59 @@
   <!-- TOOLBELT -->
   <section id="toolbelt">
     <div class="fade-in">
-      <div class="section-label">AI Toolbelt</div>
+      <span class="section-tag">AI Toolbelt</span>
       <h2>The Tools I Actually Use</h2>
       <p class="section-desc">These aren't tools I've tried once. This is my working stack — the tools I reach for daily to build, automate, and operate. My honest take on each.</p>
     </div>
     <div class="tools-grid fade-in">
       <div class="tool-card">
-        <div class="tool-header"><div class="tool-icon">🧠</div><div><div class="tool-name">Claude (Full Suite)</div><span class="tool-tag">Primary AI</span></div></div>
+        <div class="tool-header"><div class="tool-icon">🧠</div><div class="tool-name">Claude</div></div>
+        <div class="tool-tag">Primary AI</div>
         <p class="tool-desc">My daily driver for everything. I build Skills (automations), use Cowork mode for complex tasks, and have it connected to my calendar and email. Most of the builds in this portfolio started here.</p>
       </div>
       <div class="tool-card">
-        <div class="tool-header"><div class="tool-icon">💬</div><div><div class="tool-name">ChatGPT</div><span class="tool-tag">Research & Ideation</span></div></div>
+        <div class="tool-header"><div class="tool-icon">💬</div><div class="tool-name">ChatGPT</div></div>
+        <div class="tool-tag">Research &amp; Ideation</div>
         <p class="tool-desc">Go-to for quick ideation, drafts, and broad research. Memory is genuinely useful. I bounce between ChatGPT and Claude depending on the task — they have different strengths.</p>
       </div>
       <div class="tool-card">
-        <div class="tool-header"><div class="tool-icon">⚡</div><div><div class="tool-name">Cursor</div><span class="tool-tag">Code Editor</span></div></div>
+        <div class="tool-header"><div class="tool-icon">⚡</div><div class="tool-name">Cursor</div></div>
+        <div class="tool-tag">Code Editor</div>
         <p class="tool-desc">AI-native code editor. I'm not a developer by trade but Cursor lets me build real things. Write a description of what you want, get working code. The gap between idea and built has never been smaller.</p>
       </div>
       <div class="tool-card">
-        <div class="tool-header"><div class="tool-icon">🔁</div><div><div class="tool-name">n8n</div><span class="tool-tag">Workflow Automation</span></div></div>
+        <div class="tool-header"><div class="tool-icon">🔁</div><div class="tool-name">n8n</div></div>
+        <div class="tool-tag">Workflow Automation</div>
         <p class="tool-desc">Open-source automation that connects any system. I use it for multi-step workflows that run in the background — more powerful and flexible than anything else in its class.</p>
       </div>
       <div class="tool-card">
-        <div class="tool-header"><div class="tool-icon">🚀</div><div><div class="tool-name">Replit</div><span class="tool-tag">Rapid Prototyping</span></div></div>
+        <div class="tool-header"><div class="tool-icon">🚀</div><div class="tool-name">Replit</div></div>
+        <div class="tool-tag">Rapid Prototyping</div>
         <p class="tool-desc">Browser-based coding environment. Perfect for spinning up a prototype fast without worrying about setup. I use it to turn ideas into working demos in hours, not weeks.</p>
       </div>
       <div class="tool-card">
-        <div class="tool-header"><div class="tool-icon">🌊</div><div><div class="tool-name">Parabola</div><span class="tool-tag">Data Automation</span></div></div>
+        <div class="tool-header"><div class="tool-icon">🌊</div><div class="tool-name">Parabola</div></div>
+        <div class="tool-tag">Data Automation</div>
         <p class="tool-desc">No-code data pipeline tool. Built complex flows at work connecting multiple data sources, transforming and routing data to the right places. Incredibly powerful for ops-heavy workflows.</p>
       </div>
       <div class="tool-card">
-        <div class="tool-header"><div class="tool-icon">🔗</div><div><div class="tool-name">Make.com</div><span class="tool-tag">App Automation</span></div></div>
+        <div class="tool-header"><div class="tool-icon">🔗</div><div class="tool-name">Make.com</div></div>
+        <div class="tool-tag">App Automation</div>
         <p class="tool-desc">Cross-app automation with a strong visual builder. More flexible than Zapier at the same price point. I use it when I need to connect consumer apps quickly.</p>
       </div>
       <div class="tool-card">
-        <div class="tool-header"><div class="tool-icon">📓</div><div><div class="tool-name">NotebookLM</div><span class="tool-tag">Research Synthesis</span></div></div>
+        <div class="tool-header"><div class="tool-icon">📓</div><div class="tool-name">NotebookLM</div></div>
+        <div class="tool-tag">Research Synthesis</div>
         <p class="tool-desc">Google's research tool for uploading documents and having AI synthesize across them. Excellent for turning a pile of PDFs or notes into a knowledge base you can query.</p>
       </div>
       <div class="tool-card">
-        <div class="tool-header"><div class="tool-icon">💎</div><div><div class="tool-name">Gemini</div><span class="tool-tag">Multimodal AI</span></div></div>
+        <div class="tool-header"><div class="tool-icon">💎</div><div class="tool-name">Gemini</div></div>
+        <div class="tool-tag">Multimodal AI</div>
         <p class="tool-desc">Google's AI with deep Workspace integration. Useful when everything already lives in Drive, Docs, and Gmail — it just works in that ecosystem.</p>
       </div>
       <div class="tool-card">
-        <div class="tool-header"><div class="tool-icon">🍌</div><div><div class="tool-name">Nano Banana</div><span class="tool-tag">Generative Assets</span></div></div>
+        <div class="tool-header"><div class="tool-icon">🍌</div><div class="tool-name">Nano Banana</div></div>
+        <div class="tool-tag">Generative Assets</div>
         <p class="tool-desc">Generative asset creation for visual content and creative AI work. Useful for producing content assets quickly without a design team in the loop.</p>
       </div>
     </div>
@@ -379,64 +549,64 @@
   <!-- PORTFOLIO -->
   <section id="portfolio">
     <div class="fade-in">
-      <div class="section-label">Portfolio</div>
+      <span class="section-tag">Portfolio</span>
       <h2>Things I've Built</h2>
       <p class="section-desc">Real tools, real automations, real products. Some are live and in use today. Others are in active development. All of them started with a problem worth solving.</p>
     </div>
     <div class="portfolio-grid fade-in">
       <div class="artifact-card">
-        <div class="artifact-thumb blue-grad">🎬<span class="artifact-badge badge-live">Live</span></div>
-        <div class="artifact-body">
+        <div class="artifact-header">
           <div class="artifact-category">Claude Skill · Automation</div>
-          <div class="artifact-title">Video Caption Burner</div>
-          <p class="artifact-desc">A Claude Skill that automatically burns TikTok/Reels-style captions into video files. Drop videos and SRT files in a folder, run the Skill — done. Handles batches and nested folders automatically.</p>
-          <div class="artifact-tags"><span class="tag">Claude Skills</span><span class="tag">FFmpeg</span><span class="tag">Content Production</span></div>
+          <span class="artifact-badge badge-live">Live</span>
         </div>
+        <div class="artifact-title">Video Caption Burner</div>
+        <p class="artifact-desc">A Claude Skill that automatically burns TikTok/Reels-style captions into video files. Drop videos and SRT files in a folder, run the Skill — done. Handles batches and nested folders automatically.</p>
+        <div class="artifact-tags"><span class="tag">Claude Skills</span><span class="tag">FFmpeg</span><span class="tag">Content Production</span></div>
       </div>
       <div class="artifact-card">
-        <div class="artifact-thumb green-grad">🏋️<span class="artifact-badge badge-live">Live</span></div>
-        <div class="artifact-body">
+        <div class="artifact-header">
           <div class="artifact-category">Claude Skill · Fitness</div>
-          <div class="artifact-title">Mayhem Scaled Workout Logger</div>
-          <p class="artifact-desc">Automatically pulls that week's Mayhem Scaled workouts from SugarWOD and appends them as a new weekly section to a Word training log. Runs every Monday morning — zero manual work required.</p>
-          <div class="artifact-tags"><span class="tag">Claude Skills</span><span class="tag">SugarWOD API</span><span class="tag">Fitness Tracking</span></div>
+          <span class="artifact-badge badge-live">Live</span>
         </div>
+        <div class="artifact-title">Mayhem Scaled Workout Logger</div>
+        <p class="artifact-desc">Automatically pulls that week's Mayhem Scaled workouts from SugarWOD and appends them as a new weekly section to a Word training log. Runs every Monday morning — zero manual work required.</p>
+        <div class="artifact-tags"><span class="tag">Claude Skills</span><span class="tag">SugarWOD API</span><span class="tag">Fitness Tracking</span></div>
       </div>
       <div class="artifact-card">
-        <div class="artifact-thumb red-grad">🎙️<span class="artifact-badge badge-building">Building</span></div>
-        <div class="artifact-body">
+        <div class="artifact-header">
           <div class="artifact-category">Consumer Product · Health</div>
-          <div class="artifact-title">Daily Workout Coach (AI)</div>
-          <p class="artifact-desc">Voice-based fitness companion. Short daily check-in (&lt;5 min): asks how you're feeling, how much time you have, where you are — then suggests a workout from a curated library and logs your progress.</p>
-          <div class="artifact-tags"><span class="tag">Voice AI</span><span class="tag">Replit</span><span class="tag">Health Tech</span></div>
+          <span class="artifact-badge badge-building">Building</span>
         </div>
+        <div class="artifact-title">Daily Workout Coach (AI)</div>
+        <p class="artifact-desc">Voice-based fitness companion. Short daily check-in (&lt;5 min): asks how you're feeling, how much time you have, where you are — then suggests a workout from a curated library and logs your progress.</p>
+        <div class="artifact-tags"><span class="tag">Voice AI</span><span class="tag">Replit</span><span class="tag">Health Tech</span></div>
       </div>
       <div class="artifact-card">
-        <div class="artifact-thumb purple-grad">👨‍👧<span class="artifact-badge badge-building">Building</span></div>
-        <div class="artifact-body">
+        <div class="artifact-header">
           <div class="artifact-category">Consumer Product · Parenting</div>
-          <div class="artifact-title">Dad Support GPT</div>
-          <p class="artifact-desc">An AI companion for dads at every stage — expecting, newborn, toddler, all the way up. Grounded in real parenting literature. Answers real questions, tells you what's coming next, and learns your situation.</p>
-          <div class="artifact-tags"><span class="tag">Claude / ChatGPT</span><span class="tag">Knowledge Base</span><span class="tag">Consumer AI</span></div>
+          <span class="artifact-badge badge-building">Building</span>
         </div>
+        <div class="artifact-title">Dad Support GPT</div>
+        <p class="artifact-desc">An AI companion for dads at every stage — expecting, newborn, toddler, all the way up. Grounded in real parenting literature. Answers real questions, tells you what's coming next, and learns your situation.</p>
+        <div class="artifact-tags"><span class="tag">Claude / ChatGPT</span><span class="tag">Knowledge Base</span><span class="tag">Consumer AI</span></div>
       </div>
       <div class="artifact-card">
-        <div class="artifact-thumb blue-grad">☀️<span class="artifact-badge badge-building">Building</span></div>
-        <div class="artifact-body">
+        <div class="artifact-header">
           <div class="artifact-category">Productivity · Executive AI</div>
-          <div class="artifact-title">Morning Efficiency Briefing</div>
-          <p class="artifact-desc">Your AI Chief of Staff. Scans your calendar every morning, preps you for every meeting, suggests restaurants for date night, pulls your workout plan — and delivers a daily brief before you even ask.</p>
-          <div class="artifact-tags"><span class="tag">Claude + Gmail</span><span class="tag">Google Calendar</span><span class="tag">Automation</span></div>
+          <span class="artifact-badge badge-building">Building</span>
         </div>
+        <div class="artifact-title">Morning Efficiency Briefing</div>
+        <p class="artifact-desc">Your AI Chief of Staff. Scans your calendar every morning, preps you for every meeting, suggests restaurants for date night, pulls your workout plan — and delivers a daily brief before you even ask.</p>
+        <div class="artifact-tags"><span class="tag">Claude + Gmail</span><span class="tag">Google Calendar</span><span class="tag">Automation</span></div>
       </div>
       <div class="artifact-card">
-        <div class="artifact-thumb dark-grad">🏢<span class="artifact-badge badge-concept">Concept</span></div>
-        <div class="artifact-body">
+        <div class="artifact-header">
           <div class="artifact-category">B2B Product · People Ops</div>
-          <div class="artifact-title">PeopleOS</div>
-          <p class="artifact-desc">A unified company operating system — intranet, project tracker, recognition platform, prompt library, and knowledge base in one. Connects to your existing tools via API with SSO and role-based access.</p>
-          <div class="artifact-tags"><span class="tag">Enterprise</span><span class="tag">People Ops</span><span class="tag">Internal Tools</span></div>
+          <span class="artifact-badge badge-concept">Concept</span>
         </div>
+        <div class="artifact-title">PeopleOS</div>
+        <p class="artifact-desc">A unified company operating system — intranet, project tracker, recognition platform, prompt library, and knowledge base in one. Connects to your existing tools via API with SSO and role-based access.</p>
+        <div class="artifact-tags"><span class="tag">Enterprise</span><span class="tag">People Ops</span><span class="tag">Internal Tools</span></div>
       </div>
     </div>
   </section>
@@ -444,15 +614,15 @@
   <!-- PRODUCTS -->
   <section id="products">
     <div class="fade-in">
-      <div class="section-label">Products in Development</div>
+      <span class="section-tag">Products in Development</span>
       <h2>What I'm Building Next</h2>
       <p class="section-desc">These are the ideas getting real time and real development effort. Each one is something I'd personally use — because that's the only products worth building.</p>
     </div>
     <div class="products-grid fade-in">
       <div class="product-card">
-        <div class="product-icon">🏋️</div>
-        <div class="product-subtitle">Health & Fitness</div>
-        <div class="product-title">TurasAI — Daily Workout Coach</div>
+        <div class="product-num">01 · Health &amp; Fitness</div>
+        <div class="product-title">TurasAI</div>
+        <div class="product-subtitle">Daily Workout Coach</div>
         <p class="product-desc">A voice-first fitness app that has a short conversation with you each day to figure out the optimal workout, then logs it and tracks your progress over time.</p>
         <ul class="product-features">
           <li>Voice-based onboarding — height, history, injuries, goals</li>
@@ -463,9 +633,9 @@
         </ul>
       </div>
       <div class="product-card">
-        <div class="product-icon">👨‍👧</div>
-        <div class="product-subtitle">Consumer · Parenting</div>
+        <div class="product-num">02 · Consumer · Parenting</div>
         <div class="product-title">Dad Support GPT</div>
+        <div class="product-subtitle">AI Companion for Fathers</div>
         <p class="product-desc">An AI companion for dads at every stage of fatherhood — grounded in parenting literature, learning your situation, and always ready to answer the question you're too embarrassed to Google.</p>
         <ul class="product-features">
           <li>Understands your timeline — due date, ages, circumstances</li>
@@ -476,9 +646,9 @@
         </ul>
       </div>
       <div class="product-card">
-        <div class="product-icon">☀️</div>
-        <div class="product-subtitle">Productivity · Executive AI</div>
-        <div class="product-title">Morning Efficiency Briefing</div>
+        <div class="product-num">03 · Productivity · Executive AI</div>
+        <div class="product-title">Morning Briefing</div>
+        <div class="product-subtitle">AI Chief of Staff</div>
         <p class="product-desc">An AI that wakes up before you do. Scans your calendar, preps your day, removes friction before you even notice it — the kind of thing a great Chief of Staff would do.</p>
         <ul class="product-features">
           <li>Calendar-aware: meeting prep, attendee context, agendas</li>
@@ -494,67 +664,82 @@
   <!-- INDUSTRIES -->
   <section id="industries">
     <div class="fade-in">
-      <div class="section-label">Focus Areas</div>
+      <span class="section-tag">Focus Areas</span>
       <h2>Where I Want to Work</h2>
       <p class="section-desc">Not a list of where I've been — a list of where I'm headed. These are the spaces where AI can do the most good and where I bring the most energy.</p>
     </div>
-    <div class="industries-grid fade-in">
-      <div class="industry-card"><div class="industry-num">01</div><div class="industry-name">Health & Wellness</div><p class="industry-desc">From clinical tools to consumer fitness, AI has a generational opportunity to improve how people feel and perform.</p></div>
-      <div class="industry-card"><div class="industry-num">02</div><div class="industry-name">Human Performance</div><p class="industry-desc">The optimization of how people think, move, recover, and compete. WHOOP, wearables, fitness technology — this is my world.</p></div>
-      <div class="industry-card"><div class="industry-num">03</div><div class="industry-name">Work Efficiency</div><p class="industry-desc">The future of work is AI-augmented. Tools that make knowledge workers and executives dramatically more effective.</p></div>
-      <div class="industry-card"><div class="industry-num">04</div><div class="industry-name">People Operations</div><p class="industry-desc">HR and internal tooling are deeply overdue for an AI-native rethink. PeopleOS is my vision for what that looks like.</p></div>
-      <div class="industry-card"><div class="industry-num">05</div><div class="industry-name">Consumer AI Products</div><p class="industry-desc">Apps and experiences that put AI capability directly in people's hands in ways that genuinely improve daily life.</p></div>
-    </div>
-  </section>
-
-  <!-- REFERENCES -->
-  <section id="references">
-    <div class="fade-in">
-      <div class="section-label">References</div>
-      <h2>What People Say</h2>
-      <p class="section-desc">Words from people I've worked with across different companies and contexts. More available on request.</p>
-    </div>
-    <div class="refs-grid fade-in">
-      <div class="ref-card">
-        <div class="ref-quote">"</div>
-        <p class="ref-text">Charlie has a rare ability to understand a complex problem, find the right tools to solve it, and actually build a solution — not just talk about it.</p>
-        <div class="ref-author"><div class="ref-avatar">—</div><div><div class="ref-name">Reference Pending</div><div class="ref-role">Available on request</div></div></div>
+    <div class="industries-list fade-in">
+      <div class="industry-item">
+        <div class="industry-rule"></div>
+        <div class="industry-num">01</div>
+        <div class="industry-name">Health &amp; Wellness</div>
+        <p class="industry-desc">From clinical tools to consumer fitness, AI has a generational opportunity to improve how people feel and perform.</p>
       </div>
-      <div class="ref-card">
-        <div class="ref-quote">"</div>
-        <p class="ref-text">Working with Charlie you get someone who genuinely cares about the outcome, not just the deliverable. He thinks about the person on the other end of the tool.</p>
-        <div class="ref-author"><div class="ref-avatar">—</div><div><div class="ref-name">Reference Pending</div><div class="ref-role">Available on request</div></div></div>
+      <div class="industry-item">
+        <div class="industry-rule"></div>
+        <div class="industry-num">02</div>
+        <div class="industry-name">Human Performance</div>
+        <p class="industry-desc">The optimization of how people think, move, recover, and compete. WHOOP, wearables, fitness technology — this is my world.</p>
       </div>
-      <div class="ref-card">
-        <div class="ref-quote">"</div>
-        <p class="ref-text">What stands out is how Charlie approaches AI — not as a gimmick, but as a set of tools to solve real problems for real people. He's already operating the way everyone else will be in five years.</p>
-        <div class="ref-author"><div class="ref-avatar">—</div><div><div class="ref-name">Reference Pending</div><div class="ref-role">Available on request</div></div></div>
+      <div class="industry-item">
+        <div class="industry-rule"></div>
+        <div class="industry-num">03</div>
+        <div class="industry-name">Work Efficiency</div>
+        <p class="industry-desc">The future of work is AI-augmented. Tools that make knowledge workers and executives dramatically more effective.</p>
+      </div>
+      <div class="industry-item">
+        <div class="industry-rule"></div>
+        <div class="industry-num">04</div>
+        <div class="industry-name">People Operations</div>
+        <p class="industry-desc">HR and internal tooling are deeply overdue for an AI-native rethink. PeopleOS is my vision for what that looks like.</p>
+      </div>
+      <div class="industry-item">
+        <div class="industry-rule"></div>
+        <div class="industry-num">05</div>
+        <div class="industry-name">Consumer AI Products</div>
+        <p class="industry-desc">Apps and experiences that put AI capability directly in people's hands in ways that genuinely improve daily life.</p>
       </div>
     </div>
   </section>
 
   <!-- CONTACT -->
   <section id="contact">
-    <div class="fade-in" style="text-align:center">
-      <div class="section-label" style="justify-content:center">Contact</div>
+    <div class="fade-in">
+      <span class="section-tag">Contact</span>
       <h2>Let's Build Something</h2>
-      <p class="section-desc" style="margin:0 auto 2.5rem">Open to roles at the intersection of AI, operations, and product — particularly in health, human performance, or executive efficiency.</p>
+      <p class="section-desc">Open to roles at the intersection of AI, operations, and product — particularly in health, human performance, or executive efficiency.</p>
+      <a href="mailto:cmckenna516@gmail.com" class="contact-email">cmckenna516@gmail.com</a>
       <div class="contact-links">
-        <a href="mailto:cmckenna516@gmail.com" class="contact-link"><span>✉️</span> cmckenna516@gmail.com</a>
-        <a href="https://linkedin.com/in/charlesmckenna" class="contact-link" target="_blank"><span>💼</span> LinkedIn</a>
-        <a href="https://github.com/charlesmckenna" class="contact-link" target="_blank"><span>🐙</span> GitHub</a>
-        <a href="Charles_McKenna_Resume.pdf" target="_blank" class="contact-link resume-link"><span>📄</span> Download Resume</a>
+        <a href="https://www.linkedin.com/in/charlie-mckenna-6772b9178/" target="_blank" class="contact-link">LinkedIn ↗</a>
+        <a href="https://github.com/cmckenna516" target="_blank" class="contact-link">GitHub ↗</a>
+        <a href="Charles_McKenna_Resume.pdf" target="_blank" class="contact-link resume-link">Download Resume ↗</a>
       </div>
     </div>
   </section>
 
-  <footer><p>Built with <span>AI</span> by Charles McKenna · 2026</p></footer>
+  <footer>
+    <p>Built with AI by Charles McKenna &middot; 2026</p>
+  </footer>
 
   <script>
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
-    }, { threshold: 0.1 });
-    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+    // Nav: transparent over hero, white when scrolled
+    const nav  = document.getElementById('nav');
+    const hero = document.getElementById('hero');
+    const navObs = new IntersectionObserver(
+      ([e]) => {
+        nav.classList.toggle('hero-mode', e.isIntersecting);
+        nav.classList.toggle('scrolled', !e.isIntersecting);
+      },
+      { threshold: 0.05 }
+    );
+    navObs.observe(hero);
+
+    // Fade-in on scroll
+    const fadeObs = new IntersectionObserver(
+      (entries) => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }),
+      { threshold: 0.07 }
+    );
+    document.querySelectorAll('.fade-in').forEach(el => fadeObs.observe(el));
   </script>
 </body>
 </html>

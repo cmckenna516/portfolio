@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Charles McKenna — AI Builder & Operator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink:         #0A0A0F;
+      --ink-mid:     #3F3F50;
+      --ink-faint:   #9090A0;
+      --white:       #FFFFFF;
+      --surface:     #F7F7F9;
+      --border:      rgba(10,10,15,0.10);
+      --blue:        #2563EB;
+      --blue-hover:  #1D4ED8;
+      --blue-dim:    rgba(37,99,235,0.10);
+      --blue-border: rgba(37,99,235,0.22);
+      --hero-bg:     #07070C;
+    }
+
+    html { scroll-behavior: smooth; }
+    body { background: var(--white); color: var(--ink); font-family: 'DM Sans', sans-serif; font-size: 16px; line-height: 1.65; -webkit-font-smoothing: antialiased; }
+    ::selection { background: var(--blue); color: #fff; }
+    a { color: inherit; text-decoration: none; }
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: var(--surface); }
+    ::-webkit-scrollbar-thumb { background: var(--blue); border-radius: 2px; }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.25rem 6%;
+      transition: background 0.35s, border-color 0.35s, box-shadow 0.35s;
+      border-bottom: 1px solid transparent;
+    }
+    nav.hero-mode { background: transparent; }
+    nav.scrolled {
+      background: rgba(255,255,255,0.96);
+      backdrop-filter: blur(14px);
+      border-bottom-color: var(--border);
+    }
+    .nav-logo {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.1rem;
+      letter-spacing: -0.01em;
+      color: var(--white);
+      transition: color 0.35s;
+    }
+    nav.scrolled .nav-logo { color: var(--ink); }
+    .nav-links { display: flex; gap: 2.25rem; list-style: none; }
+    .nav-links a {
+      font-size: 0.83rem; font-weight: 500;
+      color: rgba(255,255,255,0.55);
+      transition: color 0.2s;
+      letter-spacing: 0.01em;
+    }
+    nav.scrolled .nav-links a { color: var(--ink-faint); }
+    .nav-links a:hover { color: var(--white) !important; }
+    nav.scrolled .nav-links a:hover { color: var(--ink) !important; }
+    .nav-actions { display: flex; align-items: center; gap: 1.1rem; }
+    .nav-resume {
+      font-size: 0.82rem; font-weight: 500;
+      color: rgba(255,255,255,0.5);
+      transition: color 0.2s;
+      letter-spacing: 0.01em;
+    }
+    nav.scrolled .nav-resume { color: var(--ink-faint); }
+    .nav-resume:hover { color: var(--white) !important; }
+    nav.scrolled .nav-resume:hover { color: var(--ink) !important; }
+    .nav-cta {
+      padding: 0.5rem 1.25rem;
+      background: var(--blue);
+      border-radius: 6px;
+      font-size: 0.82rem; font-weight: 600;
+      color: #fff;
+      transition: background 0.2s;
+    }
+    .nav-cta:hover { background: var(--blue-hover); }
+
+    /* ── HERO ── */
+    #hero {
+      background: var(--hero-bg);
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center;
+      padding: 9rem 6% 7rem;
+      position: relative; overflow: hidden;
+    }
+    .hero-rule { width: 36px; height: 1px; background: var(--blue); margin: 0 auto 2rem; }
+    .hero-eyebrow {
+      font-size: 0.72rem; font-weight: 500;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--blue);
+      margin-bottom: 2rem;
+    }
+    #hero h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(3.75rem, 10vw, 8rem);
+      line-height: 1.0;
+      letter-spacing: -0.025em;
+      color: var(--white);
+      margin-bottom: 1.75rem;
+    }
+    #hero h1 em { font-style: italic; color: var(--blue); }
+    .hero-sub {
+      max-width: 520px;
+      font-size: clamp(1rem, 1.8vw, 1.1rem);
+      color: rgba(255,255,255,0.45);
+      line-height: 1.8;
+      margin-bottom: 3rem;
+      font-weight: 300;
+    }
+    .hero-actions { display: flex; gap: 0.875rem; flex-wrap: wrap; justify-content: center; }
+    .btn-blue {
+      padding: 0.875rem 2rem;
+      background: var(--blue);
+      border-radius: 7px;
+      font-size: 0.88rem; font-weight: 600;
+      color: #fff;
+      transition: background 0.2s, transform 0.15s;
+      letter-spacing: 0.01em;
+    }
+    .btn-blue:hover { background: var(--blue-hover); transform: translateY(-2px); }
+    .btn-ghost {
+      padding: 0.875rem 2rem;
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 7px;
+      font-size: 0.88rem; font-weight: 500;
+      color: rgba(255,255,255,0.55);
+      transition: border-color 0.2s, color 0.2s, transform 0.15s;
+    }
+    .btn-ghost:hover { border-color: rgba(255,255,255,0.45); color: #fff; transform: translateY(-2px); }
+    .hero-scroll {
+      position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: 0.6rem;
+      color: rgba(255,255,255,0.2); font-size: 0.68rem; letter-spacing: 0.18em; text-transform: uppercase;
+    }
+    .scroll-line {
+      width: 1px; height: 36px;
+      background: linear-gradient(to bottom, rgba(255,255,255,0.2), transparent);
+      animation: scrollLine 2s ease-in-out infinite;
+    }
+    @keyframes scrollLine { 0%,100%{transform:scaleY(1);opacity:1} 50%{transform:scaleY(.4);opacity:.3} }
+
+    /* ── SHARED ── */
+    section { padding: 7rem 6%; }
+    .section-tag {
+      display: block;
+      font-size: 0.7rem; font-weight: 600;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--blue);
+      margin-bottom: 1rem;
+    }
+    h2 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(2.25rem, 4vw, 3.5rem);
+      letter-spacing: -0.025em;
+      line-height: 1.08;
+      margin-bottom: 1.25rem;
+    }
+    .section-desc {
+      color: var(--ink-mid);
+      max-width: 520px;
+      line-height: 1.8;
+      margin-bottom: 4rem;
+      font-weight: 400;
+    }
+
+    /* ── ABOUT ── */
+    #about { background: var(--white); }
+    .about-grid { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 7rem; align-items: start; }
+    .about-text p { color: var(--ink-mid); line-height: 1.85; margin-bottom: 1.3rem; font-size: 1.02rem; }
+    .about-text p strong { color: var(--ink); font-weight: 600; }
+    .about-text p:last-of-type { margin-bottom: 0; }
+    .resume-cta {
+      display: inline-flex; align-items: center; gap: 0.55rem;
+      margin-top: 2.25rem;
+      padding-bottom: 0.15rem;
+      border-bottom: 1px solid var(--blue);
+      font-size: 0.88rem; font-weight: 600; color: var(--blue);
+      transition: gap 0.2s;
+    }
+    .resume-cta:hover { gap: 0.85rem; }
+    .about-photo {
+      width: 100%;
+      height: auto;
+      border-radius: 4px;
+      display: block;
+      margin-bottom: 2.75rem;
+    }
+    .stat-group { display: grid; grid-template-columns: 1fr 1fr; gap: 2.75rem 2.5rem; }
+    .stat-rule { width: 20px; height: 2px; background: var(--blue); margin-bottom: 0.9rem; }
+    .stat-num {
+      font-family: 'DM Serif Display', serif;
+      font-size: 3.25rem;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      color: var(--ink);
+      margin-bottom: 0.4rem;
+    }
+    .stat-label {
+      font-size: 0.75rem; font-weight: 500;
+      color: var(--ink-faint);
+      text-transform: uppercase; letter-spacing: 0.09em;
+    }
+
+    /* ── TOOLBELT ── */
+    #toolbelt { background: var(--surface); }
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 2px;
+    }
+    .tool-card {
+      background: var(--surface);
+      padding: 1.75rem;
+      transition: background 0.2s;
+    }
+    .tool-card:hover { background: var(--white); }
+    .tool-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.6rem; }
+    .tool-icon { font-size: 1.2rem; flex-shrink: 0; width: 30px; text-align: center; }
+    .tool-name { font-family: 'DM Serif Display', serif; font-size: 1.05rem; letter-spacing: -0.01em; }
+    .tool-tag {
+      display: inline-block;
+      margin-bottom: 0.65rem;
+      font-size: 0.67rem; font-weight: 600;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--blue);
+    }
+    .tool-desc { font-size: 0.865rem; color: var(--ink-mid); line-height: 1.7; }
+
+    /* ── PORTFOLIO ── */
+    #portfolio { background: var(--hero-bg); }
+    #portfolio .section-tag  { color: rgba(59,130,246,0.7); }
+    #portfolio h2            { color: var(--white); }
+    #portfolio .section-desc { color: rgba(255,255,255,0.38); }
+    .portfolio-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.25rem; }
+    .artifact-card {
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 10px;
+      padding: 2rem;
+      transition: border-color 0.2s, transform 0.2s, background 0.2s;
+    }
+    .artifact-card:hover {
+      border-color: rgba(37,99,235,0.35);
+      transform: translateY(-3px);
+      background: rgba(37,99,235,0.04);
+    }
+    .artifact-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.1rem; }
+    .artifact-category {
+      font-size: 0.68rem; font-weight: 600;
+      letter-spacing: 0.13em; text-transform: uppercase;
+      color: var(--blue); line-height: 1.4;
+    }
+    .artifact-badge {
+      padding: 0.2rem 0.6rem;
+      border-radius: 100px;
+      font-size: 0.67rem; font-weight: 700;
+      letter-spacing: 0.07em; text-transform: uppercase;
+      flex-shrink: 0; margin-left: 0.5rem;
+    }
+    .badge-live     { background: rgba(16,185,129,0.12);  color: #34D399; border: 1px solid rgba(16,185,129,0.25); }
+    .badge-building { background: rgba(245,158,11,0.12);  color: #FCD34D; border: 1px solid rgba(245,158,11,0.25); }
+    .badge-concept  { background: rgba(99,102,241,0.12);  color: #A5B4FC; border: 1px solid rgba(99,102,241,0.25); }
+    .artifact-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.3rem; letter-spacing: -0.015em; line-height: 1.15;
+      color: var(--white);
+      margin-bottom: 0.7rem;
+    }
+    .artifact-desc { font-size: 0.875rem; color: rgba(255,255,255,0.45); line-height: 1.75; margin-bottom: 1.25rem; }
+    .artifact-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+    .tag {
+      padding: 0.2rem 0.65rem;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 100px;
+      font-size: 0.7rem; font-weight: 500;
+      color: rgba(255,255,255,0.35);
+    }
+
+    /* ── PRODUCTS ── */
+    #products { background: var(--hero-bg); }
+    #products .section-tag  { color: rgba(59,130,246,0.7); }
+    #products h2            { color: var(--white); }
+    #products .section-desc { color: rgba(255,255,255,0.38); }
+    .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.25rem; }
+    .product-card {
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 10px; padding: 2rem;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .product-card:hover { border-color: rgba(37,99,235,0.35); background: rgba(37,99,235,0.04); }
+    .product-num {
+      font-size: 0.67rem; font-weight: 600;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--blue); margin-bottom: 1.25rem;
+    }
+    .product-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.45rem; letter-spacing: -0.015em; line-height: 1.1;
+      color: var(--white); margin-bottom: 0.3rem;
+    }
+    .product-subtitle {
+      font-size: 0.72rem; font-weight: 500;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: rgba(255,255,255,0.28); margin-bottom: 1.1rem;
+    }
+    .product-desc { font-size: 0.88rem; color: rgba(255,255,255,0.45); line-height: 1.8; margin-bottom: 1.5rem; }
+    .product-features { list-style: none; display: flex; flex-direction: column; gap: 0.55rem; }
+    .product-features li {
+      display: flex; align-items: baseline; gap: 0.65rem;
+      font-size: 0.84rem; color: rgba(255,255,255,0.35);
+    }
+    .product-features li::before { content: '—'; color: var(--blue); flex-shrink: 0; font-size: 0.78rem; }
+
+    /* ── INDUSTRIES ── */
+    #industries { background: var(--surface); }
+    .industries-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 3rem 3.5rem; }
+    .industry-rule {
+      width: 22px; height: 2px;
+      background: var(--border);
+      margin-bottom: 0.9rem;
+      transition: background 0.25s;
+    }
+    .industry-item:hover .industry-rule { background: var(--blue); }
+    .industry-num {
+      font-size: 0.67rem; font-weight: 600;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--ink-faint); margin-bottom: 0.45rem;
+    }
+    .industry-name {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.35rem; letter-spacing: -0.015em;
+      margin-bottom: 0.55rem;
+    }
+    .industry-desc { font-size: 0.84rem; color: var(--ink-mid); line-height: 1.7; }
+
+    /* ── CONTACT ── */
+    #contact {
+      background: var(--hero-bg);
+      text-align: center;
+      padding: 9rem 6%;
+    }
+    #contact .section-tag { color: rgba(59,130,246,0.7); }
+    #contact h2 { color: var(--white); margin-bottom: 1.25rem; }
+    #contact .section-desc { color: rgba(255,255,255,0.38); margin: 0 auto 3.5rem; }
+    .contact-email {
+      display: inline-block;
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(1.5rem, 3vw, 2.35rem);
+      letter-spacing: -0.025em;
+      color: var(--white);
+      border-bottom: 1px solid rgba(255,255,255,0.18);
+      padding-bottom: 0.2rem;
+      margin-bottom: 3rem;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .contact-email:hover { border-color: var(--blue); color: var(--blue); }
+    .contact-links { display: flex; justify-content: center; gap: 0.75rem; flex-wrap: wrap; }
+    .contact-link {
+      padding: 0.65rem 1.4rem;
+      border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 7px;
+      font-size: 0.84rem; font-weight: 500;
+      color: rgba(255,255,255,0.4);
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .contact-link:hover { border-color: rgba(255,255,255,0.3); color: var(--white); }
+    .contact-link.resume-link { border-color: var(--blue-border); color: rgba(59,130,246,0.75); }
+    .contact-link.resume-link:hover { border-color: var(--blue); color: var(--blue); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--hero-bg);
+      padding: 2rem 6%;
+      text-align: center;
+      border-top: 1px solid rgba(255,255,255,0.05);
+      color: rgba(255,255,255,0.18);
+      font-size: 0.78rem;
+      letter-spacing: 0.03em;
+    }
+
+    /* ── ANIMATIONS ── */
+    .fade-in { opacity: 0; transform: translateY(18px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── ARTIFACT CTA ── */
+    .artifact-cta {
+      display: inline-block;
+      margin-top: 1rem;
+      padding: 0.45rem 1rem;
+      border: 1px solid rgba(37,99,235,0.35);
+      border-radius: 5px;
+      font-size: 0.78rem; font-weight: 600;
+      color: #60A5FA;
+      letter-spacing: 0.01em;
+      transition: border-color 0.2s, color 0.2s, background 0.2s;
+    }
+    .artifact-cta:hover { border-color: var(--blue); color: #fff; background: rgba(37,99,235,0.15); }
+    .artifact-cta-disabled {
+      display: inline-block;
+      margin-top: 1rem;
+      padding: 0.45rem 1rem;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 5px;
+      font-size: 0.78rem; font-weight: 500;
+      color: rgba(255,255,255,0.2);
+      letter-spacing: 0.01em;
+      cursor: default;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 960px) {
+      .about-grid { grid-template-columns: 1fr; gap: 4rem; }
+    }
+    @media (max-width: 1080px) {
+      #hero { padding: 7rem 6% 4rem; }
+      .hero-rule { margin-bottom: 1.25rem; }
+      .hero-eyebrow { margin-bottom: 1.25rem; }
+      #hero h1 { margin-bottom: 1.25rem; }
+      .hero-sub { margin-bottom: 2rem; }
+    }
+    @media (max-width: 768px) {
+      nav { padding: 1rem 5%; }
+      .nav-links { display: none; }
+      section { padding: 5rem 5%; }
+      #contact { padding: 6rem 5%; }
+      .stat-group { gap: 2rem; }
+      #hero { padding: 5.5rem 5% 2.5rem; }
+      .hero-rule { margin-bottom: 0.75rem; }
+      .hero-eyebrow { margin-bottom: 0.75rem; }
+      #hero h1 { margin-bottom: 0.875rem; }
+      .hero-sub { margin-bottom: 1.5rem; font-size: 0.95rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="hero-mode" id="nav">
+    <a href="#hero" class="nav-logo">Charles McKenna</a>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#toolbelt">Toolbelt</a></li>
+      <li><a href="#portfolio">Portfolio</a></li>
+      <li><a href="#products">Products</a></li>
+      <li><a href="#industries">Focus Areas</a></li>
+    </ul>
+    <div class="nav-actions">
+      <a href="Charles_McKenna_Resume.pdf" target="_blank" class="nav-resume">Resume ↗</a>
+      <a href="mailto:cmckenna516@gmail.com" class="nav-cta">Get in Touch</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="hero-rule"></div>
+    <p class="hero-eyebrow">AI Builder &amp; Operator</p>
+    <h1>
+      I Build<br />
+      With <em>AI.</em><br />
+      Seriously.
+    </h1>
+    <p class="hero-sub">
+      I don't just use AI tools — I build products, automations, and systems with them.
+      From fitness apps to executive efficiency tools to workflow automation, this is my working portfolio.
+    </p>
+    <div class="hero-actions">
+      <a href="#portfolio" class="btn-blue">View My Work</a>
+      <a href="Charles_McKenna_Resume.pdf" target="_blank" class="btn-ghost">Download Resume ↗</a>
+    </div>
+    <div class="hero-scroll">
+      <div class="scroll-line"></div>
+      Scroll
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="about-grid fade-in">
+      <div class="about-text">
+        <span class="section-tag">About</span>
+        <h2>Building the Future<br />One Tool at a Time</h2>
+        <p>
+          I approach my career through the lens of my <strong>AI toolbelt</strong> — a constantly evolving stack of tools I use to move faster, build smarter, and solve problems that used to require entire teams.
+        </p>
+        <p>
+          My interest isn't AI for AI's sake. It's about <strong>human performance, health, and efficiency</strong> — using the best tools available to help people (including myself) operate at a higher level.
+        </p>
+        <p>
+          I sit at the intersection of operator, builder, and strategist. I can talk product roadmap in the morning, ship an AI-powered workflow by lunch, and train an exec team on AI adoption in the afternoon.
+        </p>
+        <a href="Charles_McKenna_Resume.pdf" target="_blank" class="resume-cta">
+          Download Resume ↗
+        </a>
+      </div>
+      <div>
+        <img src="headshot.jpg" alt="Charlie McKenna" class="about-photo" />
+        <div class="stat-group">
+          <div>
+            <div class="stat-rule"></div>
+            <div class="stat-num">10+</div>
+            <div class="stat-label">AI Tools in Active Use</div>
+          </div>
+          <div>
+            <div class="stat-rule"></div>
+            <div class="stat-num">6+</div>
+            <div class="stat-label">Portfolio Builds</div>
+          </div>
+          <div>
+            <div class="stat-rule"></div>
+            <div class="stat-num">3</div>
+            <div class="stat-label">Products in Development</div>
+          </div>
+          <div>
+            <div class="stat-rule"></div>
+            <div class="stat-num">5</div>
+            <div class="stat-label">Target Industries</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TOOLBELT -->
+  <section id="toolbelt">
+    <div class="fade-in">
+      <span class="section-tag">AI Toolbelt</span>
+      <h2>The Tools I Actually Use</h2>
+      <p class="section-desc">These aren't tools I've tried once. This is my working stack — the tools I reach for daily to build, automate, and operate. My honest take on each.</p>
+    </div>
+    <div class="tools-grid fade-in">
+      <div class="tool-card">
+        <div class="tool-header"><div class="tool-icon">🧠</div><div class="tool-name">Claude</div></div>
+        <div class="tool-tag">Primary AI</div>
+        <p class="tool-desc">My daily driver for everything. I build Skills (automations), use Cowork mode for complex tasks, and have it connected to my calendar and email. Most of the builds in this portfolio started here.</p>
+      </div>
+      <div class="tool-card">
+        <div class="tool-header"><div class="tool-icon">💬</div><div class="tool-name">ChatGPT</div></div>
+        <div class="tool-tag">Research &amp; Ideation</div>
+        <p class="tool-desc">Go-to for quick ideation, drafts, and broad research. Memory is genuinely useful. I bounce between ChatGPT and Claude depending on the task — they have different strengths. I also use it heavily for image generation: YouTube thumbnails, mocking up what a piece of furniture would look like in my actual living room, flyers for events, and other fun creative stuff. I've built custom GPTs here too — including Media Assistant, which takes a YouTube video description and generates optimized titles, descriptions, thumbnail concepts, and A/B test variants, building out the full asset suite around your main content.</p>
+      </div>
+      <div class="tool-card">
+        <div class="tool-header"><div class="tool-icon">⚡</div><div class="tool-name">Cursor</div></div>
+        <div class="tool-tag">Code Editor</div>
+        <p class="tool-desc">AI-native code editor. I'm not a classically trained software engineer but Cursor lets me build real things. Write a description of what you want, get working code. I also love that it shows you exactly which files are being touched — you can click into them and preview changes in real time. I run Claude Code inside Cursor too, which gives me an even tighter AI-assisted workflow when I need more control over the build.</p>
+      </div>
+      <div class="tool-card">
+        <div class="tool-header"><div class="tool-icon">🔁</div><div class="tool-name">n8n</div></div>
+        <div class="tool-tag">Workflow Automation</div>
+        <p class="tool-desc">Open-source automation that connects any system. I use it for multi-step workflows that run in the background — more powerful and flexible than anything else in its class.</p>
+      </div>
+      <div class="tool-card">
+        <div class="tool-header"><div class="tool-icon">🚀</div><div class="tool-name">Replit</div></div>
+        <div class="tool-tag">Rapid Prototyping</div>
+        <p class="tool-desc">Browser-based coding environment that removes every setup obstacle between you and a working app. I built a fully functioning project tracking tool for my team here — GANTT charts, tasks, subtasks, the works — without being asked. I saw a gap, filled it fast, and iterated on it with the team over time until it was exactly what they needed.</p>
+      </div>
+      <div class="tool-card">
+        <div class="tool-header"><div class="tool-icon">🌊</div><div class="tool-name">Parabola</div></div>
+        <div class="tool-tag">Data Automation</div>
+        <p class="tool-desc">No-code data pipeline tool with serious power under the hood. I built a flow that pulled from 30 different files across 2 separate data sources, combined everything into a single clean database, and then piped that database into Replit to power a visual dashboard built exactly around what the team needed to see.</p>
+      </div>
+      <div class="tool-card">
+        <div class="tool-header"><div class="tool-icon">🔗</div><div class="tool-name">Make.com</div></div>
+        <div class="tool-tag">App Automation</div>
+        <p class="tool-desc">Cross-app automation with a strong visual builder. More flexible than Zapier at the same price point. I use it to schedule automations and get complex, standardized processes to run reliably without anyone having to touch them — set it up once, let it run.</p>
+      </div>
+      <div class="tool-card">
+        <div class="tool-header"><div class="tool-icon">📓</div><div class="tool-name">NotebookLM</div></div>
+        <div class="tool-tag">Research Synthesis</div>
+        <p class="tool-desc">Ask a targeted question to one document or fifty, and get a straight, source-grounded answer. It's great for moments like "I know we have a policy on this but I can't remember the specific detail" — NotebookLM tells you the answer and shows you exactly where it came from. No hallucinating, no digging through files.</p>
+      </div>
+      <div class="tool-card">
+        <div class="tool-header"><div class="tool-icon">💎</div><div class="tool-name">Gemini</div></div>
+        <div class="tool-tag">Multimodal AI</div>
+        <p class="tool-desc">Google's AI with deep Workspace integration. The standout is that it's right where you're already working — no context switching, no copy-pasting into a separate chat. If your day lives in Drive, Docs, and Gmail, Gemini is just there. Pair it with Nano Banana for image work and it covers a lot of ground.</p>
+      </div>
+      <div class="tool-card">
+        <div class="tool-header"><div class="tool-icon">🍌</div><div class="tool-name">Nano Banana</div></div>
+        <div class="tool-tag">Generative Assets</div>
+        <p class="tool-desc">My go-to for image generation. When I need strong visual output fast — without a designer, without a brief, without waiting — Nano Banana delivers. Excellent image quality, quick iteration, and it handles creative prompts well.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PORTFOLIO -->
+  <section id="portfolio">
+    <div class="fade-in">
+      <span class="section-tag">Portfolio</span>
+      <h2>Things I've Built</h2>
+      <p class="section-desc">Real tools, real automations, real products. Some are live and in use today. Others are in active development. All of them started with a problem worth solving.</p>
+    </div>
+    <div class="portfolio-grid fade-in">
+      <div class="artifact-card">
+        <div class="artifact-header">
+          <div class="artifact-category">Claude Skill · Automation</div>
+          <span class="artifact-badge badge-live">Live</span>
+        </div>
+        <div class="artifact-title">Video Caption Burner</div>
+        <p class="artifact-desc">A Claude Skill that automatically burns TikTok/Reels-style captions into video files. Drop videos and SRT files in a folder, run the Skill — done. Handles batches and nested folders automatically.</p>
+        <div class="artifact-tags"><span class="tag">Claude Skills</span><span class="tag">FFmpeg</span><span class="tag">Content Production</span></div>
+        <a href="https://github.com/cmckenna516/video-caption-tool" target="_blank" class="artifact-cta">View on GitHub ↗</a>
+      </div>
+      <div class="artifact-card">
+        <div class="artifact-header">
+          <div class="artifact-category">Claude Skill · Fitness</div>
+          <span class="artifact-badge badge-live">Live</span>
+        </div>
+        <div class="artifact-title">Workout Logger</div>
+        <p class="artifact-desc">Automatically pulls that week's workouts from a fitness platform and appends them as a new weekly section to a Word training log. Runs on a schedule every week — zero manual work required, builds a growing archive over time.</p>
+        <div class="artifact-tags"><span class="tag">Claude Skills</span><span class="tag">Web Automation</span><span class="tag">Fitness Tracking</span></div>
+        <span class="artifact-cta-disabled">Link coming soon</span>
+      </div>
+      <div class="artifact-card">
+        <div class="artifact-header">
+          <div class="artifact-category">Consumer Product · Health</div>
+          <span class="artifact-badge badge-building">Building</span>
+        </div>
+        <div class="artifact-title">Fit in a Pinch</div>
+        <p class="artifact-desc">Voice-based fitness companion. Short daily check-in (&lt;5 min): asks how you're feeling, how much time you have, where you are — then suggests a workout from a curated library and logs your progress.</p>
+        <div class="artifact-tags"><span class="tag">Voice AI</span><span class="tag">Replit</span><span class="tag">Health Tech</span></div>
+        <span class="artifact-cta-disabled">Link coming soon</span>
+      </div>
+      <div class="artifact-card">
+        <div class="artifact-header">
+          <div class="artifact-category">Consumer Product · Parenting</div>
+          <span class="artifact-badge badge-building">Building</span>
+        </div>
+        <div class="artifact-title">Dad Support GPT</div>
+        <p class="artifact-desc">An AI companion for dads at every stage — expecting, newborn, toddler, all the way up. Grounded in real parenting literature. Answers real questions, tells you what's coming next, and learns your situation.</p>
+        <div class="artifact-tags"><span class="tag">Claude / ChatGPT</span><span class="tag">Knowledge Base</span><span class="tag">Consumer AI</span></div>
+        <span class="artifact-cta-disabled">Link coming soon</span>
+      </div>
+      <div class="artifact-card">
+        <div class="artifact-header">
+          <div class="artifact-category">Productivity · Executive AI</div>
+          <span class="artifact-badge badge-live">Live</span>
+        </div>
+        <div class="artifact-title">Morning Efficiency Briefing</div>
+        <p class="artifact-desc">Your AI Chief of Staff. Scans your calendar and email every morning — preps you for every meeting, flags anything urgent or tied to a project you're keeping a close eye on, suggests restaurants, pulls your workout plan. Always learning, always evolving, always one step ahead of the obstacles in your day.</p>
+        <div class="artifact-tags"><span class="tag">Claude + Gmail</span><span class="tag">Google Calendar</span><span class="tag">Automation</span></div>
+        <a href="https://github.com/cmckenna516/Executive-Assistant" target="_blank" class="artifact-cta">View on GitHub ↗</a>
+      </div>
+      <div class="artifact-card">
+        <div class="artifact-header">
+          <div class="artifact-category">Custom GPT · Content Production</div>
+          <span class="artifact-badge badge-live">Live</span>
+        </div>
+        <div class="artifact-title">Media Assistant GPT</div>
+        <p class="artifact-desc">Describe your video in any format — rough notes, voice-to-text, stream of consciousness — and get back a full content pack: optimized title, YouTube description, thumbnail concept, and AI image prompt. Trained on your brand voice and a custom best practices guide so every output sounds like you.</p>
+        <div class="artifact-tags"><span class="tag">Custom GPT</span><span class="tag">YouTube SEO</span><span class="tag">Content Production</span></div>
+        <a href="https://chatgpt.com/g/g-6938e505a7308191964f778965fb58c5-mediaassistant" target="_blank" class="artifact-cta">Try it on ChatGPT ↗</a>
+      </div>
+      <div class="artifact-card">
+        <div class="artifact-header">
+          <div class="artifact-category">B2B Product · People Ops</div>
+          <span class="artifact-badge badge-concept">Concept</span>
+        </div>
+        <div class="artifact-title">PeopleOS</div>
+        <p class="artifact-desc">A unified company operating system — intranet, project tracker, recognition platform, prompt library, and knowledge base in one. Connects to your existing tools via API with SSO and role-based access.</p>
+        <div class="artifact-tags"><span class="tag">Enterprise</span><span class="tag">People Ops</span><span class="tag">Internal Tools</span></div>
+        <span class="artifact-cta-disabled">Link coming soon</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRODUCTS -->
+  <section id="products">
+    <div class="fade-in">
+      <span class="section-tag">Products in Development</span>
+      <h2>What I'm Building Next</h2>
+      <p class="section-desc">These are the ideas getting real time and real development effort. Each one is something I'd personally use — because that's the only products worth building.</p>
+    </div>
+    <div class="products-grid fade-in">
+      <div class="product-card">
+        <div class="product-num">01 · Health &amp; Fitness</div>
+        <div class="product-title">Fit in a Pinch</div>
+        <div class="product-subtitle">Daily Workout Coach</div>
+        <p class="product-desc">A voice-first fitness app that has a short conversation with you each day to figure out the optimal workout, then logs it and tracks your progress over time.</p>
+        <ul class="product-features">
+          <li>Voice-based onboarding — height, history, injuries, goals</li>
+          <li>Daily check-in: time available, location, soreness level</li>
+          <li>Curated workout library with AI-matched suggestions</li>
+          <li>Progress logging + integration with WHOOP, Apple Health</li>
+          <li>Smart reminders based on your actual schedule</li>
+        </ul>
+      </div>
+      <div class="product-card">
+        <div class="product-num">02 · Consumer · Parenting</div>
+        <div class="product-title">Dad Support GPT</div>
+        <div class="product-subtitle">AI Companion for Fathers</div>
+        <p class="product-desc">An AI companion for dads at every stage of fatherhood — grounded in parenting literature, learning your situation, and always ready to answer the question you're too embarrassed to Google.</p>
+        <ul class="product-features">
+          <li>Understands your timeline — due date, ages, circumstances</li>
+          <li>Grounded in popular parenting books and expert guidance</li>
+          <li>Proactively tells you what's coming in the next stage</li>
+          <li>Remembers what you've shared — gets smarter over time</li>
+          <li>Extensible to any life stage or support use case</li>
+        </ul>
+      </div>
+      <div class="product-card">
+        <div class="product-num">03 · Career &amp; Self-Discovery</div>
+        <div class="product-title">TurasAI</div>
+        <div class="product-subtitle">AI Skill Discovery</div>
+        <p class="product-desc">An AI-guided skill discovery platform. It learns about you through conversation, generates hypotheses about where you may have real talent or potential, then assigns small experiments to test them — and scores your attempts with visible reasoning. The more you use it, the sharper it gets.</p>
+        <ul class="product-features">
+          <li>Conversational onboarding surfaces interests, energy patterns, and problem style</li>
+          <li>Generates skill hypotheses — not generic personality labels</li>
+          <li>Assigns small, low-cost experiments matched to your potential strengths</li>
+          <li>Scores attempts with a transparent rubric and plain-language feedback</li>
+          <li>Dashboard tracks signals over time and suggests what to try next</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- INDUSTRIES -->
+  <section id="industries">
+    <div class="fade-in">
+      <span class="section-tag">Focus Areas</span>
+      <h2>Problem Spaces I Love</h2>
+      <p class="section-desc">Not a list of where I've been — a list of where I'm headed. These are the spaces where AI can do the most good and where I bring the most energy.</p>
+    </div>
+    <div class="industries-list fade-in">
+      <div class="industry-item">
+        <div class="industry-rule"></div>
+        <div class="industry-num">01</div>
+        <div class="industry-name">Health &amp; Wellness</div>
+        <p class="industry-desc">From clinical tools to consumer fitness, AI has a generational opportunity to improve how people feel and perform.</p>
+      </div>
+      <div class="industry-item">
+        <div class="industry-rule"></div>
+        <div class="industry-num">02</div>
+        <div class="industry-name">Human Performance</div>
+        <p class="industry-desc">The optimization of how people think, move, recover, and compete. WHOOP, wearables, fitness technology — this is my world.</p>
+      </div>
+      <div class="industry-item">
+        <div class="industry-rule"></div>
+        <div class="industry-num">03</div>
+        <div class="industry-name">Work Efficiency</div>
+        <p class="industry-desc">The future of work is AI-augmented. Tools that make knowledge workers and executives dramatically more effective.</p>
+      </div>
+      <div class="industry-item">
+        <div class="industry-rule"></div>
+        <div class="industry-num">04</div>
+        <div class="industry-name">People Operations</div>
+        <p class="industry-desc">HR and internal tooling are deeply overdue for an AI-native rethink. PeopleOS is my vision for what that looks like.</p>
+      </div>
+      <div class="industry-item">
+        <div class="industry-rule"></div>
+        <div class="industry-num">05</div>
+        <div class="industry-name">Consumer AI Products</div>
+        <p class="industry-desc">Apps and experiences that put AI capability directly in people's hands in ways that genuinely improve daily life.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="fade-in">
+      <span class="section-tag">Contact</span>
+      <h2>Let's Build Something</h2>
+      <p class="section-desc">Open to roles at the intersection of AI, operations, and product — particularly in health, human performance, or executive efficiency.</p>
+      <a href="mailto:cmckenna516@gmail.com" class="contact-email">cmckenna516@gmail.com</a>
+      <div class="contact-links">
+        <a href="https://www.linkedin.com/in/charlie-mckenna-6772b9178/" target="_blank" class="contact-link">LinkedIn ↗</a>
+        <a href="https://github.com/cmckenna516" target="_blank" class="contact-link">GitHub ↗</a>
+        <a href="Charles_McKenna_Resume.pdf" target="_blank" class="contact-link resume-link">Download Resume ↗</a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>Built with AI by Charles McKenna &middot; 2026</p>
+  </footer>
+
+  <script>
+    // Nav: transparent over hero, white when scrolled
+    const nav  = document.getElementById('nav');
+    const hero = document.getElementById('hero');
+    const navObs = new IntersectionObserver(
+      ([e]) => {
+        nav.classList.toggle('hero-mode', e.isIntersecting);
+        nav.classList.toggle('scrolled', !e.isIntersecting);
+      },
+      { threshold: 0.05 }
+    );
+    navObs.observe(hero);
+
+    // Fade-in on scroll
+    const fadeObs = new IntersectionObserver(
+      (entries) => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }),
+      { threshold: 0.07 }
+    );
+    document.querySelectorAll('.fade-in').forEach(el => fadeObs.observe(el));
+  </script>
+</body>
+</html>
